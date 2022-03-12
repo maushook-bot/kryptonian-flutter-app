@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/cart.dart' show CartItem;
 import 'package:intl/intl.dart';
@@ -20,11 +22,11 @@ class OrdersItem extends StatefulWidget {
 }
 
 class _OrdersItemState extends State<OrdersItem> {
-  bool showCardFlag = false;
+  bool _showCardFlag = false;
 
   void _showCardHandler() {
     setState(() {
-      showCardFlag = !showCardFlag;
+      _showCardFlag = !_showCardFlag;
     });
   }
 
@@ -41,13 +43,13 @@ class _OrdersItemState extends State<OrdersItem> {
             subtitle: Text('${DateFormat.yMMMd().format(widget.dateTime)} '
                 '${DateFormat.Hm().format(widget.dateTime)}'),
             trailing: IconButton(
-              icon: showCardFlag
+              icon: _showCardFlag
                   ? Icon(Icons.expand_less)
                   : Icon(Icons.expand_more),
               onPressed: _showCardHandler,
             ),
           ),
-          showCardFlag
+          _showCardFlag
               ? _buildDetailsCard(context)
               : _buildEmptyContent(context),
         ],
@@ -57,7 +59,7 @@ class _OrdersItemState extends State<OrdersItem> {
 
   Widget _buildDetailsCard(BuildContext context) {
     return Container(
-      height: 220,
+      height: min(widget.products.length * 10 + 100, 180).toDouble(),
       width: double.infinity,
       child: Card(
         margin: EdgeInsets.all(10),

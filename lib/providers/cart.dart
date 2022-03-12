@@ -58,6 +58,27 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId].quantity > 1) {
+      _items.update(
+        productId,
+        (item) => CartItem(
+          id: item.id,
+          productId: item.productId,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity - 1,
+        ),
+      );
+    } else {
+      _items.remove(productId);
+    }
+    notifyListeners();
+  }
+
   double getTotalItemPrice(CartItem item) {
     /// SubTitle => cartData.itemsList[index].price * cartData.itemsList[index].quantity
     //print('Method => getTotalItemPrice: $item');
@@ -67,6 +88,7 @@ class Cart with ChangeNotifier {
   void addItems(String productID, String title, double price) {
     if (_items.containsKey(productID)) {
       /// If Item present in Cart then increase the quantity and price
+      /// map.update(key, (value) => newValue )
       _items.update(
         productID,
         (existingItem) {
@@ -92,6 +114,29 @@ class Cart with ChangeNotifier {
         ),
       );
       //print("Method => addItems: cartItem: $_items");
+    }
+    notifyListeners();
+  }
+
+  void reduceItems(String productID) {
+    if (_items.containsKey(productID) && _items[productID].quantity > 1) {
+      /// If Item present in Cart then decrease the quantity and price
+      /// map.update(key, (value) => newValue )
+      print(2);
+      _items.update(
+        productID,
+        (existingItem) {
+          return CartItem(
+            id: existingItem.id,
+            productId: existingItem.productId,
+            title: existingItem.title,
+            quantity: existingItem.quantity > 0 ? existingItem.quantity - 1 : 0,
+            price: existingItem.price,
+          );
+        },
+      );
+    } else {
+      _items.remove(productID);
     }
     notifyListeners();
   }

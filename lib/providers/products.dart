@@ -53,9 +53,16 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  void showProductQuantity(String id, int index) {
+  void addProductQuantity(String id, int index) {
     _items[index].id == id ? _items[index].qty += 1 : 0;
     //print('ProductQty => $_items[index].qty');
+    notifyListeners();
+  }
+
+  void decreaseProductQuantity(String id, int index) {
+    (_items[index].id == id) && (_items[index].qty > 0)
+        ? _items[index].qty -= 1
+        : 0;
     notifyListeners();
   }
 
