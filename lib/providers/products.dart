@@ -55,7 +55,6 @@ class Products with ChangeNotifier {
 
   void addProductQuantity(String id, int index) {
     _items[index].id == id ? _items[index].qty += 1 : 0;
-    //print('ProductQty => $_items[index].qty');
     notifyListeners();
   }
 
@@ -79,8 +78,31 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void addProduct() {
-    /// _items.add(value);
+  void addProduct(Product newProduct) {
+    /// ADD NEW PRODUCT
+    print('ADD => Product');
+    final product = Product(
+      id: DateTime.now().toString(),
+      title: newProduct.title,
+      price: newProduct.price,
+      description: newProduct.description,
+      imageUrl: newProduct.imageUrl,
+    );
+    _items.add(product);
+    notifyListeners();
+  }
+
+  void deleteProduct(String productId) {
+    print('DELETE => Product: ${productId}');
+    _items.removeWhere((product) => product.id == productId);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product updatedProduct) {
+    //TODO: Work on this!!
+    print('EDIT => Product');
+    final productIndex = _items.indexWhere((product) => product.id == id);
+    _items[productIndex] = updatedProduct;
     notifyListeners();
   }
 }

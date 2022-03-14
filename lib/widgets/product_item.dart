@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/widgets/badge.dart';
@@ -10,15 +8,9 @@ import 'package:provider/provider.dart';
 
 import 'badge.dart';
 
-class ProductItem extends StatefulWidget {
+class ProductItem extends StatelessWidget {
   final int index;
   ProductItem({this.index});
-
-  @override
-  State<ProductItem> createState() => _ProductItemState();
-}
-
-class _ProductItemState extends State<ProductItem> {
   void _selectProduct(BuildContext context, Product productData, index) {
     Navigator.of(context).pushNamed(
       ProductDetailsScreen.routeName,
@@ -28,7 +20,7 @@ class _ProductItemState extends State<ProductItem> {
 
   void _cartUpdateHandler(
       Products products, Product productData, Cart cartData) {
-    products.addProductQuantity(productData.id, widget.index);
+    products.addProductQuantity(productData.id, index);
     cartData.addItems(productData.id, productData.title, productData.price);
     print('CALL => CartUpdateHandler');
   }
@@ -38,12 +30,12 @@ class _ProductItemState extends State<ProductItem> {
     int sensitivity = 0;
     if (direction.delta.direction > sensitivity) {
       /// Down Swipe
-      productsData.decreaseProductQuantity(productData.id, widget.index);
+      productsData.decreaseProductQuantity(productData.id, index);
       cartData.reduceItems(productData.id);
       print('CALL => CartUpdateHandler, Decrease Qty');
     } else if (direction.delta.direction < sensitivity) {
       /// Up Swipe
-      productsData.addProductQuantity(productData.id, widget.index);
+      productsData.addProductQuantity(productData.id, index);
       cartData.addItems(productData.id, productData.title, productData.price);
       print('CALL => CartUpdateHandler, Increase Qty');
     }
@@ -52,7 +44,7 @@ class _ProductItemState extends State<ProductItem> {
   void _dismissRightHandler(DismissDirection direction, Product productData,
       Products productsData, Cart cartData) {
     /// Right Swipe
-    productsData.addProductQuantity(productData.id, widget.index);
+    productsData.addProductQuantity(productData.id, index);
     cartData.addItems(productData.id, productData.title, productData.price);
     print('CALL => CartUpdateHandler, Increase Qty');
   }
@@ -61,7 +53,7 @@ class _ProductItemState extends State<ProductItem> {
       Products productsData, Cart cartData) {
     /// Left Swipe
 
-    productsData.decreaseProductQuantity(productData.id, widget.index);
+    productsData.decreaseProductQuantity(productData.id, index);
     cartData.reduceItems(productData.id);
     print('CALL => CartUpdateHandler, Decrease Qty');
   }
@@ -81,7 +73,7 @@ class _ProductItemState extends State<ProductItem> {
       borderRadius: BorderRadius.circular(20),
       child: GridTile(
         child: GestureDetector(
-          onTap: () => _selectProduct(context, productData, widget.index),
+          onTap: () => _selectProduct(context, productData, index),
           child: Image.network(
             productData.imageUrl,
             fit: BoxFit.cover,
@@ -123,7 +115,7 @@ class _ProductItemState extends State<ProductItem> {
             builder: (_, products, __) => Badge(
               color: Colors.black54,
               textColor: Colors.white,
-              value: products.item[widget.index].qty.toString(),
+              value: products.item[index].qty.toString(),
               child: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () {
@@ -137,7 +129,7 @@ class _ProductItemState extends State<ProductItem> {
                       action: SnackBarAction(
                         onPressed: () {
                           products.decreaseProductQuantity(
-                              productData.id, widget.index);
+                              productData.id, index);
                           cartData.clearSingleItem(productData.id);
                         },
                         label: 'Undo',

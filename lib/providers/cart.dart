@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_complete_guide/providers/product.dart';
 
 class CartItem {
   final String id;
@@ -42,6 +43,12 @@ class Cart with ChangeNotifier {
 
   int get itemCount {
     return _items.length;
+  }
+
+  int getItemQuantity(String productId) {
+    if(_items.containsKey(productId)) {
+      return 0;
+    }
   }
 
   void deleteItems(String productId) {
@@ -122,7 +129,6 @@ class Cart with ChangeNotifier {
     if (_items.containsKey(productID) && _items[productID].quantity > 1) {
       /// If Item present in Cart then decrease the quantity and price
       /// map.update(key, (value) => newValue )
-      print(2);
       _items.update(
         productID,
         (existingItem) {
@@ -137,6 +143,24 @@ class Cart with ChangeNotifier {
       );
     } else {
       _items.remove(productID);
+    }
+    notifyListeners();
+  }
+
+  void updateItems(String productId, Product updatedProduct) {
+    if (_items.containsKey(productId)) {
+      _items.update(
+        productId,
+        (existingItem) {
+          return CartItem(
+            id: existingItem.id,
+            productId: productId,
+            title: updatedProduct.title,
+            price: updatedProduct.price,
+            quantity: existingItem.quantity,
+          );
+        },
+      );
     }
     notifyListeners();
   }

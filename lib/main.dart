@@ -1,7 +1,11 @@
+/// Kryptonian Shop APP
+/// version: 2.2 | Stable | No-Server
+/// AUTHOR: Maushook
+/// COPYRIGHT: Neural Bots Inc
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/purplay.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
-import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Krypton',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Purplay.kToDark,
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
+import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:flutter_complete_guide/widgets/orders_item.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class OrdersScreen extends StatelessWidget {
           products: ordersData.orders[index].products,
         ),
       ),
+      drawer: MainDrawer(),
     );
   }
 }
