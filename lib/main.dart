@@ -1,7 +1,9 @@
 /// Kryptonian Shop APP
-/// version: 2.2 | Stable | No-Server
+/// version: 3.0
+/// WebServer: FireBase
 /// AUTHOR: Maushook
 /// COPYRIGHT: Neural Bots Inc
+
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/purplay.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';

@@ -1,45 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = [
-    Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      qty: 0,
-    ),
-    Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-      qty: 0,
-    ),
-    Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-      qty: 0,
-    ),
-    Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-      qty: 0,
-    ),
-  ];
+  List<Product> _items = [];
 
   List<Product> get item {
     return [..._items];
@@ -78,31 +44,120 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void addProduct(Product newProduct) {
-    /// ADD NEW PRODUCT
-    print('ADD => Product');
-    final product = Product(
-      id: DateTime.now().toString(),
-      title: newProduct.title,
-      price: newProduct.price,
-      description: newProduct.description,
-      imageUrl: newProduct.imageUrl,
-    );
-    _items.add(product);
-    notifyListeners();
+  Future<void> fetchProduct() async {
+    print('FETCH => PRODUCTS');
+    final List productIdList = [];
+    final url = Uri.https(
+        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '/products.json');
+
+    try {
+      final response = await http.get(url);
+      final Map<String, dynamic> result = json.decode(response.body);
+      final List<Product> LoadedProduct = [];
+      print('LoadedProduct => ${result}');
+
+      result.forEach(
+        (key, product) {
+          LoadedProduct.add(
+            Product(
+              id: key,
+              title: product['title'],
+              price: product['price'],
+              description: product['description'],
+              isFavorite: product['isFavorite'],
+              imageUrl: product['imageUrl'],
+            ),
+          );
+        },
+      );
+      _items = LoadedProduct;
+      print(_items);
+      notifyListeners();
+    } catch (error) {
+      print('ERROR => $error');
+      throw error;
+    }
   }
 
-  void deleteProduct(String productId) {
+  Future<void> addProduct(Product newProduct) async {
+    String newProductId;
+    final url = Uri.https(
+        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '/products.json');
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {
+            'title': newProduct.title,
+            'price': newProduct.price,
+            'description': newProduct.description,
+            'qty': newProduct.qty,
+            'imageUrl': newProduct.imageUrl,
+            'isFavorite': newProduct.isFavorite,
+          },
+        ),
+      );
+      newProductId = json.decode(response.body)['name'];
+
+      /// ADD NEW PRODUCT
+      print('ADD => Product');
+      final product = Product(
+        id: newProductId,
+        title: newProduct.title,
+        price: newProduct.price,
+        description: newProduct.description,
+        imageUrl: newProduct.imageUrl,
+      );
+      _items.add(product);
+      notifyListeners();
+    } catch (error) {
+      print('ERROR: ${error}');
+      throw error;
+    }
+  }
+
+  Future<void> deleteProduct(String productId) async {
     print('DELETE => Product: ${productId}');
-    _items.removeWhere((product) => product.id == productId);
+    final url = Uri.https(
+        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '/products/${productId}.json');
+    final response = await http.delete(url);
+
+    print('DELETE Response => ${response.statusCode}');
+    if (response.statusCode == 200) {
+      _items.removeWhere((product) => product.id == productId);
+    } else {
+      print('DELETE => Failed: ${response.body}');
+    }
     notifyListeners();
   }
 
-  void updateProduct(String id, Product updatedProduct) {
+  Future<void> updateProduct(String id, Product updatedProduct) async {
     //TODO: Work on this!!
-    print('EDIT => Product');
+    print('UPDATE => Product');
     final productIndex = _items.indexWhere((product) => product.id == id);
-    _items[productIndex] = updatedProduct;
-    notifyListeners();
+    if (productIndex >= 0) {
+      final url = Uri.https(
+          'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+          '/products/${id}.json');
+      final response = await http.patch(
+        url,
+        body: json.encode(
+          {
+            'title': updatedProduct.title,
+            'price': updatedProduct.price,
+            'description': updatedProduct.description,
+            'qty': updatedProduct.qty,
+            'imageUrl': updatedProduct.imageUrl,
+            'isFavorite': updatedProduct.isFavorite,
+          }
+        ),
+      );
+      print(response.body);
+      _items[productIndex] = updatedProduct;
+      notifyListeners();
+    }
   }
 }
