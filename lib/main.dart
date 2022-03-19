@@ -1,8 +1,9 @@
-/// Kryptonian Shop APP
-/// version: 3.0
-/// WebServer: FireBase
-/// AUTHOR: Maushook
-/// COPYRIGHT: Neural Bots Inc
+/// @@@ Kryptonian Shop APP @@@
+/// @@@ version: 3.1 @@@
+/// @@@ App Features: Add/Fetch Orders from Server
+/// @@@ WebServer: FireBase @@@
+/// @@@ AUTHOR: Maushook @@@
+/// @@@ COPYRIGHT: Neural Bots Inc @@@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/purplay.dart';

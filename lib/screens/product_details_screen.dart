@@ -45,9 +45,11 @@ class ProductDetailsScreen extends StatelessWidget {
             Container(
               height: 300,
               width: double.infinity,
-              child: Image.network(
-                loadedProduct.imageUrl,
+              child: FittedBox(
                 fit: BoxFit.cover,
+                child: ClipRRect(
+                  child: _buildImageContent(loadedProduct),
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -115,6 +117,14 @@ class ProductDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Image _buildImageContent(Product productData) {
+    return Image.network(
+      productData.imageUrl,
+      errorBuilder: (context, error, stackTrace) =>
+          Image.asset('assets/images/placeholder.png'),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
@@ -118,7 +119,8 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> deleteProduct(String productId) async {
+  Future<void> deleteProductTwin(String productId) async {
+    // TODO: Alternate Approach to Delete!
     print('DELETE => Product: ${productId}');
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
@@ -128,8 +130,32 @@ class Products with ChangeNotifier {
     print('DELETE Response => ${response.statusCode}');
     if (response.statusCode == 200) {
       _items.removeWhere((product) => product.id == productId);
-    } else {
+    } else if (response.statusCode >= 400) {
       print('DELETE => Failed: ${response.body}');
+      throw HttpException('Delete Failed. Try Again Later!');
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteProduct(String productId) async {
+    print('DELETE => Product: ${productId}');
+    final existingProdIndex = _items.indexWhere((item) => item.id == productId);
+    Product existingProduct = _items[existingProdIndex];
+    _items.removeWhere((product) => product.id == productId);
+
+    final url = Uri.https(
+        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '/products/${productId}.json');
+
+    final response = await http.delete(url);
+    print('DELETE Response => ${response.statusCode}');
+    if (response.statusCode == 200) {
+      existingProduct = null;
+    } else if (response.statusCode >= 400) {
+      print('DELETE => Failed: ${response.body}');
+      _items.insert(existingProdIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Delete Failed. Try Again Later!');
     }
     notifyListeners();
   }
@@ -144,16 +170,13 @@ class Products with ChangeNotifier {
           '/products/${id}.json');
       final response = await http.patch(
         url,
-        body: json.encode(
-          {
-            'title': updatedProduct.title,
-            'price': updatedProduct.price,
-            'description': updatedProduct.description,
-            'qty': updatedProduct.qty,
-            'imageUrl': updatedProduct.imageUrl,
-            'isFavorite': updatedProduct.isFavorite,
-          }
-        ),
+        body: json.encode({
+          'title': updatedProduct.title,
+          'price': updatedProduct.price,
+          'description': updatedProduct.description,
+          'qty': updatedProduct.qty,
+          'imageUrl': updatedProduct.imageUrl,
+        }),
       );
       print(response.body);
       _items[productIndex] = updatedProduct;

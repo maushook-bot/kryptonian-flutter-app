@@ -132,7 +132,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       /// EDIT Existing Products:-
       //Provider.of<Cart>(context, listen: false).updateItems(_editedProduct.id, _editedProduct);
       Provider.of<Cart>(context, listen: false).deleteItems(_editedProduct.id);
-      productsData.updateProduct(_editedProduct.id, _editedProduct);
+      await productsData.updateProduct(_editedProduct.id, _editedProduct);
 
       print('id: ${_editedProduct.id}');
       print('title: ${_editedProduct.title}');

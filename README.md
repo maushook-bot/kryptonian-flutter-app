@@ -1,4 +1,4 @@
-# flutter_shop_app
+# Kryptonian Flutter Shop Application
 
 A new Flutter project.
 

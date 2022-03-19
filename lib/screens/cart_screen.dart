@@ -96,6 +96,24 @@ class CartScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _showAlertDialog(BuildContext context) async {
+    await showDialog<Null>(
+      context: context,
+      builder: (context) => AlertDialog(
+        elevation: 10.4,
+        title: Text('Attention Schmuck', textAlign: TextAlign.center),
+        content: Text('Something Went Wrong. Try Creating Orders later!',
+            textAlign: TextAlign.center),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTopHeader(
       BuildContext context, Cart cartData, Orders ordersData) {
     final productsData = Provider.of<Products>(context);
@@ -114,16 +132,34 @@ class CartScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           SizedBox(width: 10),
-          TextButton(
-            onPressed: () {
-              ordersData.addOrder(
-                  cartData.itemsList, cartData.itemSummaryPrice);
-              cartData.clearCart();
-              productsData.clearProductQuantity();
-              Navigator.of(context).pushNamed(OrdersScreen.routeName);
-            },
-            child: Text('ORDER NOW',
-                style: TextStyle(fontWeight: FontWeight.w800)),
+          Consumer<Orders>(
+            builder: (_, orders, __) => TextButton(
+              onPressed: (cartData.itemSummaryPrice <= 0 || orders.loadingState == true)
+                  ? null
+                  : () async {
+                      try {
+                        orders.setLoading();
+                        await ordersData.addOrder(
+                            cartData.itemsList, cartData.itemSummaryPrice);
+                        cartData.clearCart();
+                        orders.resetLoading();
+
+                        productsData.clearProductQuantity();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Order Placed Successfully')),
+                        );
+                        Navigator.of(context).pushNamed(OrdersScreen.routeName);
+                      } catch (error) {
+                        _showAlertDialog(context);
+                      }
+                    },
+              child: orders.loadingState == true
+                  ? Center(child: CircularProgressIndicator())
+                  : Text(
+                      'ORDER NOW',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+            ),
           ),
         ],
       ),
