@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 3.1 @@@
-/// @@@ App Features: Add/Fetch Orders from Server
+/// @@@ version: 3.2 @@@
+/// @@@ App Features: FLUTTER-58 Slidable feature for Managed Products
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

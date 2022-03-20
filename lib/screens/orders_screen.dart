@@ -54,12 +54,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Nothing here!',
+            'Nothing here 🎧',
             style: TextStyle(fontSize: 32, color: Colors.black54),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 3),
           Text(
-            'Add Items to Cart and place an Order to get started',
+            'Place an Order to get started!',
             style: TextStyle(fontSize: 16, color: Colors.black54),
           )
         ],

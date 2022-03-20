@@ -134,7 +134,8 @@ class CartScreen extends StatelessWidget {
           SizedBox(width: 10),
           Consumer<Orders>(
             builder: (_, orders, __) => TextButton(
-              onPressed: (cartData.itemSummaryPrice <= 0 || orders.loadingState == true)
+              onPressed: (cartData.itemSummaryPrice <= 0 ||
+                      orders.loadingState == true)
                   ? null
                   : () async {
                       try {
@@ -146,7 +147,13 @@ class CartScreen extends StatelessWidget {
 
                         productsData.clearProductQuantity();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Order Placed Successfully')),
+                          SnackBar(
+                            content: Text(
+                              'Order Placed Successfully 🛒',
+                              style: TextStyle(
+                                  color: Colors.white),
+                            ),
+                          ),
                         );
                         Navigator.of(context).pushNamed(OrdersScreen.routeName);
                       } catch (error) {
