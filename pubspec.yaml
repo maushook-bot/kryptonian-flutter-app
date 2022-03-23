@@ -27,6 +27,7 @@ dependencies:
   intl: ^0.17.0
   http: ^0.13.4
   flutter_slidable: ^1.2.0
+  sensors: ^0.4.2+6
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +52,18 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/placeholder.png
+    - assets/images/shopping_astro.jpg
+    - assets/images/space.jpg
+    - assets/images/shopping_1.png
+    - assets/images/shopping_2.png
+    - assets/images/874945.jpg
+    - assets/images/imgbin_computer-desk-laptop-business-png.png
+    - assets/images/laptop.png
+    - assets/images/laptop_rotated.png
+    - assets/images/shopping_cart.png
+    - assets/images/shopping_cart_rotated.png
+    - assets/images/astranaut.png
+    - assets/images/spaceship-removebg-preview.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

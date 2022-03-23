@@ -8,7 +8,7 @@ class Purplay {
     0xff4c1a54, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
     const <int, Color>{
       50: const Color(0xff947698), //10%
-      100: const Color(0xff907698), //20%
+      100: const Color(0xff947698), //20%
       200: const Color(0xff704876), //30%
       300: const Color(0xff684876), //40%
       400: const Color(0xff6f4876), //50%

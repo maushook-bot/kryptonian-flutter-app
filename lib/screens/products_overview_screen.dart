@@ -13,6 +13,7 @@ enum FilterOptions {
 }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  static const routeName = '/product-overview';
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
@@ -29,21 +30,44 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if (_isInit == true) {
       setState(() {
         _isLoading = true;
       });
 
-      Provider.of<Products>(context).fetchProduct().then(
-            (_) {
-              setState(() {
-                _isLoading = false;
-              });
-            },
-          );
+      try {
+        await Provider.of<Products>(context).fetchProduct();
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        print('PRODUCTS ERROR => $error');
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            elevation: 10.4,
+            contentPadding: EdgeInsets.all(30.0),
+            title: Text('Attention', textAlign: TextAlign.center),
+            content: Text(
+              'Something went wrong, ${error}',
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text('Close'),
+              ),
+            ],
+          ),
+        );
+      }
     }
+
+    setState(() {
+      _isLoading = false;
+    });
     _isInit = false;
     super.didChangeDependencies();
   }

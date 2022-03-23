@@ -57,21 +57,22 @@ class Products with ChangeNotifier {
       final Map<String, dynamic> result = json.decode(response.body);
       final List<Product> LoadedProduct = [];
       print('LoadedProduct => ${result}');
-
-      result.forEach(
-        (key, product) {
-          LoadedProduct.add(
-            Product(
-              id: key,
-              title: product['title'],
-              price: product['price'],
-              description: product['description'],
-              isFavorite: product['isFavorite'],
-              imageUrl: product['imageUrl'],
-            ),
-          );
-        },
-      );
+      result['error'] == 'Permission denied'
+          ? throw 'Authentication Failed Permission Denied!'
+          : result.forEach(
+              (key, product) {
+                LoadedProduct.add(
+                  Product(
+                    id: key,
+                    title: product['title'],
+                    price: product['price'],
+                    description: product['description'],
+                    isFavorite: product['isFavorite'],
+                    imageUrl: product['imageUrl'],
+                  ),
+                );
+              },
+            );
       _items = LoadedProduct;
       print(_items);
       notifyListeners();
