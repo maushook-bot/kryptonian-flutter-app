@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
@@ -45,12 +46,12 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchProduct() async {
+  Future<void> fetchProduct(auth) async {
     print('FETCH => PRODUCTS');
     final List productIdList = [];
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+        '/products.json', {'auth': auth});
 
     try {
       final response = await http.get(url);
@@ -82,11 +83,11 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product newProduct) async {
+  Future<void> addProduct(Product newProduct, String auth) async {
     String newProductId;
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+        '/products.json', {'auth': auth});
     try {
       final response = await http.post(
         url,
@@ -120,12 +121,12 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> deleteProductTwin(String productId) async {
+  Future<void> deleteProductTwin(String productId, String auth) async {
     // TODO: Alternate Approach to Delete!
     print('DELETE => Product: ${productId}');
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products/${productId}.json');
+        '/products/${productId}.json', {'auth': auth});
     final response = await http.delete(url);
 
     print('DELETE Response => ${response.statusCode}');
@@ -138,7 +139,7 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteProduct(String productId) async {
+  Future<void> deleteProduct(String productId, String auth) async {
     print('DELETE => Product: ${productId}');
     final existingProdIndex = _items.indexWhere((item) => item.id == productId);
     Product existingProduct = _items[existingProdIndex];
@@ -146,7 +147,7 @@ class Products with ChangeNotifier {
 
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products/${productId}.json');
+        '/products/${productId}.json', {'auth': auth});
 
     final response = await http.delete(url);
     print('DELETE Response => ${response.statusCode}');
@@ -161,14 +162,14 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(String id, Product updatedProduct) async {
+  Future<void> updateProduct(String id, Product updatedProduct, String auth) async {
     //TODO: Work on this!!
     print('UPDATE => Product');
     final productIndex = _items.indexWhere((product) => product.id == id);
     if (productIndex >= 0) {
       final url = Uri.https(
           'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-          '/products/${id}.json');
+          '/products/${id}.json', {'auth': auth});
       final response = await http.patch(
         url,
         body: json.encode({

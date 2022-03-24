@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/pallete/purplay.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/screens/perspective_zoom_screen.dart';
-import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode { Login, SignUp }
 
@@ -10,9 +12,6 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    print('Device Size: $deviceSize');
-    print('Width: ${deviceSize.width}');
-    print('Height: ${deviceSize.height}');
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -28,14 +27,29 @@ class AuthScreen extends StatelessWidget {
               left: deviceSize.width * 0.05,
             ),
             child: Center(
-              child: Text(
-                'Kryptonian Boutique',
-                style: TextStyle(
-                  color: Purplay.kToDark.shade400,
-                  fontFamily: 'Lato',
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 0,
+                    child: Image.asset(
+                      'assets/images/cart-purple-removebg-preview.png',
+                      width: 30,
+                      height: 30,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Kryptonian Boutique',
+                    style: TextStyle(
+                      color: Purplay.kToDark.shade400,
+                      fontFamily: 'Lato',
+                      fontSize: 27,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
               heightFactor: 2.5,
             ),
@@ -62,24 +76,69 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
-    if(!_form.currentState.validate()) {
+  void _showErrorDialog(String message) {
+    print('Inside ShowAlertDialog');
+    showDialog<Null>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('An Error has Occurred', textAlign: TextAlign.center),
+          content: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Text('$message', textAlign: TextAlign.center),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text('Close'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submit() async {
+    if (!_form.currentState.validate()) {
       return;
     }
     _form.currentState.save();
     setState(() {
       _isLoading = true;
     });
-    if (_authData == AuthMode.Login) {
-      // TODO: Log User In
-    } else {
-      // TODO: Sign Up User
+
+    try {
+      if (_authMode == AuthMode.Login) {
+        // TODO: Log User In
+        await Provider.of<Auth>(context, listen: false).login(
+            _authData['email'], _authData['password'], 'signInWithPassword');
+      } else {
+        // TODO: Sign Up User
+        await Provider.of<Auth>(context, listen: false)
+            .signup(_authData['email'], _authData['password'], 'signUp');
+      }
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication Failed!';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This Email is already in use!';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Cannot find this Email. Signup or Try later!';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Password Invalid. Try Again!';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Password is too weak!';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This is not a valid Email!';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage = 'Authentication Failed. Try again Later!';
+      _showErrorDialog(errorMessage);
     }
 
     setState(() {
       _isLoading = false;
     });
-
   }
 
   void _toggleAuthMode() {
@@ -99,10 +158,10 @@ class _AuthCardState extends State<AuthCard> {
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       elevation: 30,
-      color: Colors.grey.withOpacity(0.6),
+      color: Purplay.kToDark.shade50.withOpacity(0.6),
       margin: EdgeInsets.only(
         right: deviceSize.width * 0.05,
-        top: deviceSize.height * 0.37,
+        top: deviceSize.height * 0.30,
         left: deviceSize.width * 0.05,
       ),
       child: SingleChildScrollView(
@@ -116,6 +175,7 @@ class _AuthCardState extends State<AuthCard> {
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Enter Email',
+                      icon: Icon(Icons.email_outlined),
                       errorStyle: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
@@ -139,6 +199,7 @@ class _AuthCardState extends State<AuthCard> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
+                      icon: Icon(Icons.password_rounded),
                       errorStyle: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
@@ -166,6 +227,7 @@ class _AuthCardState extends State<AuthCard> {
                       : TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
+                            icon: Icon(Icons.password_rounded),
                             errorStyle: TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
@@ -193,8 +255,7 @@ class _AuthCardState extends State<AuthCard> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () => Navigator.of(context)
-                              .pushNamed(ProductsOverviewScreen.routeName),
+                          onPressed: _submit,
                           child: Text(_authMode == AuthMode.Login
                               ? 'Sign in with Email'
                               : 'Create an account'),

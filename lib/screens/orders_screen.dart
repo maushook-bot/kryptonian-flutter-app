@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:flutter_complete_guide/widgets/orders_item.dart';
@@ -17,7 +18,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     // TODO: implement initState
     Future.delayed(Duration.zero).then(
       (_) {
-        Provider.of<Orders>(context, listen: false).fetchAllOrders();
+        String auth = Provider.of<Auth>(context, listen: false).token;
+        Provider.of<Orders>(context, listen: false).fetchAllOrders(auth);
       },
     );
     super.initState();
@@ -31,7 +33,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
         title: Text('My Orders'),
       ),
       body: RefreshIndicator(
-        onRefresh: () => ordersData.fetchAllOrders(),
+        onRefresh: () {
+          String auth = Provider.of<Auth>(context, listen: false).token;
+          return ordersData.fetchAllOrders(auth);
+        },
         child: ordersData.orders.length == 0
             ? _buildEmptyContent()
             : ListView.builder(

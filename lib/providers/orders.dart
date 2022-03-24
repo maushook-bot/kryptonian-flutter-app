@@ -62,11 +62,11 @@ class Orders with ChangeNotifier {
     return productTotal;
   }
 
-  Future<void> fetchAllOrders() async {
+  Future<void> fetchAllOrders(String auth) async {
     // TODO:
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/orders.json');
+        '/orders.json', {'auth': auth});
 
     try {
       final response = await http.get(url);
@@ -106,12 +106,12 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+  Future<void> addOrder(List<CartItem> cartProducts, double total, auth) async {
     // TODO:
     final timeStamp = DateTime.now();
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/orders.json');
+        '/orders.json', {'auth': auth});
 
     final response = await http.post(
       url,

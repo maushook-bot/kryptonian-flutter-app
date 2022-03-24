@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
@@ -45,11 +46,12 @@ class _UserProductItemState extends State<UserProductItem> {
 
   void _productDismissHandler(DismissDirection direction, BuildContext context,
       Products productsData, Cart cartData) async {
+    String auth = Provider.of<Auth>(context, listen: false).token;
     if (direction == DismissDirection.endToStart) {
       /// Right -> Left => DELETE
       cartData.deleteItems(widget.productId);
       try {
-        await productsData.deleteProduct(widget.productId);
+        await productsData.deleteProduct(widget.productId, auth);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Product Deleted!'),
@@ -86,8 +88,9 @@ class _UserProductItemState extends State<UserProductItem> {
 
   void _callDeleteProductHandler(Products productsData, Cart cartData) async {
     cartData.deleteItems(widget.productId);
+    String auth = Provider.of<Auth>(context, listen: false).token;
     try {
-      await productsData.deleteProduct(widget.productId);
+      await productsData.deleteProduct(widget.productId, auth);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Product Deleted!'),

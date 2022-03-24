@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
 import 'package:flutter_complete_guide/widgets/main_drawer.dart';
@@ -9,7 +10,8 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
   
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchProduct();
+    String auth = Provider.of<Auth>(context, listen: false).token;
+    await Provider.of<Products>(context, listen: false).fetchProduct(auth);
   }
   
   @override
@@ -27,7 +29,8 @@ class UserProductsScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () async {
-              await productsData.fetchProduct();
+              String auth = Provider.of<Auth>(context, listen: false).token;
+              await productsData.fetchProduct(auth);
             },
             icon: Icon(Icons.more),
           ),

@@ -63,8 +63,12 @@ flutter:
     - assets/images/shopping_cart.png
     - assets/images/shopping_cart_rotated.png
     - assets/images/astranaut.png
-    - assets/images/spaceship-removebg-preview.png
-
+    - assets/images/asteroids-removebg-preview.png
+    - assets/images/cart.png
+    - assets/images/shopping-cart-icon.jpg
+    - assets/images/red_cart-removebg-preview.png
+    - assets/images/cart-purple-removebg-preview.png
+    - assets/images/astranaut_1-removebg-preview.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

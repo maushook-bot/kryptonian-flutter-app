@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart' show Cart;
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
@@ -140,8 +141,10 @@ class CartScreen extends StatelessWidget {
                   : () async {
                       try {
                         orders.setLoading();
-                        await ordersData.addOrder(
-                            cartData.itemsList, cartData.itemSummaryPrice);
+                        String auth =
+                            Provider.of<Auth>(context, listen: false).token;
+                        await ordersData.addOrder(cartData.itemsList,
+                            cartData.itemSummaryPrice, auth);
                         cartData.clearCart();
                         orders.resetLoading();
 
@@ -150,8 +153,7 @@ class CartScreen extends StatelessWidget {
                           SnackBar(
                             content: Text(
                               'Order Placed Successfully 🛒',
-                              style: TextStyle(
-                                  color: Colors.white),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
@@ -32,13 +33,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
+    String auth = Provider.of<Auth>(context, listen: false).token;
     if (_isInit == true) {
       setState(() {
         _isLoading = true;
       });
 
       try {
-        await Provider.of<Products>(context).fetchProduct();
+        await Provider.of<Products>(context).fetchProduct(auth);
       } catch (error) {
         setState(() {
           _isLoading = false;

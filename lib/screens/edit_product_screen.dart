@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
@@ -82,7 +83,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   Future<void> _saveForm(Products productsData) async {
     final isValid = _form.currentState.validate();
+    String auth = Provider.of<Auth>(context, listen: false).token;
     print('Valid: $isValid');
+
     if (!isValid) {
       return;
     }
@@ -96,7 +99,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     /// Save Contents to Products Provider:-
     if (_editedProduct.id == null) {
       try {
-        await productsData.addProduct(_editedProduct);
+        await productsData.addProduct(_editedProduct, auth);
       } catch (error) {
         await showDialog<Null>(
           context: context,
@@ -132,7 +135,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
       /// EDIT Existing Products:-
       //Provider.of<Cart>(context, listen: false).updateItems(_editedProduct.id, _editedProduct);
       Provider.of<Cart>(context, listen: false).deleteItems(_editedProduct.id);
-      await productsData.updateProduct(_editedProduct.id, _editedProduct);
+      String auth = Provider.of<Auth>(context, listen: false).token;
+
+      await productsData.updateProduct(_editedProduct.id, _editedProduct, auth);
 
       print('id: ${_editedProduct.id}');
       print('title: ${_editedProduct.title}');
