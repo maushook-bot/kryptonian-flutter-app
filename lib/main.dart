@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 3.3 @@@
-/// @@@ App Features: User Authentication Screen
+/// @@@ version: 3.5 @@@
+/// @@@ App Features: Advanced User Authentication Screen
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -18,6 +18,7 @@ import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/product_details_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
 import 'package:flutter_complete_guide/screens/user_products_screen.dart';
+import 'package:flutter_complete_guide/widgets/welcome.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -46,9 +47,9 @@ class MyApp extends StatelessWidget {
           ),
           //home: ProductsOverviewScreen(),
           routes: {
-            '/': (ctx) => authData.isAuth == true
-                ? ProductsOverviewScreen()
-                : AuthScreen(),
+            '/': (ctx) =>
+                authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
+            AuthScreen.routeName: (ctx) => AuthScreen(),
             ProductsOverviewScreen.routeName: (ctx) => ProductsOverviewScreen(),
             ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),

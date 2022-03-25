@@ -48,82 +48,20 @@ class _PerspectiveZoomScreenState extends State<PerspectiveZoomScreen> {
         child: Center(
           child: Stack(
             children: [
-              _buildPositioned(
-                padTop: deviceSize.height * 0,
-                padBottom: deviceSize.height * 0,
-                padRight: deviceSize.width * 0,
-                padLeft: deviceSize.width * 0,
-                ImageLoc: 'assets/images/874945.jpg',
-                imgWidth: deviceSize.width,
-                imgHeight: 1820,
-              ),
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Purplay.kToDark.shade800.withOpacity(0.35),
+                      Color(0xff18203d).withOpacity(1),
+                      Color(0xff18203d).withOpacity(1),
+                      Colors.black.withOpacity(1),
+                      Color(0xff232c51),
                     ],
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topLeft,
-                    stops: [0, 0, 0, 0, 1],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0, 0, 1, 1],
                   ),
                 ),
-              ),
-              _buildPositioned(
-                padTop: deviceSize.height * 0,
-                padBottom: deviceSize.height * 0.095,
-                padRight: deviceSize.width * 0,
-                padLeft: deviceSize.width * 0,
-                ImageLoc: 'assets/images/shopping_1.png',
-                imgWidth: 145,
-                imgHeight: 145,
-              ),
-              _buildPositioned(
-                padTop: deviceSize.height * 0,
-                padBottom: deviceSize.height * 0.45,
-                padRight: deviceSize.width * 0.5,
-                padLeft: deviceSize.width * 0,
-                ImageLoc: 'assets/images/laptop_rotated.png',
-                imgWidth: 120,
-                imgHeight: 120,
-              ),
-              _buildPositioned(
-                padTop: deviceSize.height * 0.1,
-                padBottom: deviceSize.height * 0.37,
-                padRight: deviceSize.width * 0.0009,
-                padLeft: deviceSize.width * 0.6,
-                ImageLoc: 'assets/images/shopping_cart_rotated.png',
-                imgWidth: 120,
-                imgHeight: 120,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Colors.black.withOpacity(1.0),
-                      Purplay.kToDark.shade800.withOpacity(0.25),
-                    ],
-                    begin: Alignment.bottomRight,
-                    end: Alignment.centerLeft,
-                    stops: [0, 0, 0, 0, 1],
-                  ),
-                ),
-              ),
-              _buildPositioned(
-                padTop: deviceSize.height * 0.7,
-                padBottom: deviceSize.height * 0.09,
-                padRight: deviceSize.width * 0.0009,
-                padLeft: deviceSize.width * 0.6,
-                ImageLoc: 'assets/images/astranaut_1-removebg-preview.png',
-                imgWidth: 120,
-                imgHeight: 120,
               ),
               _buildPositioned(
                 padTop: deviceSize.height * 0.75,

@@ -28,6 +28,8 @@ dependencies:
   http: ^0.13.4
   flutter_slidable: ^1.2.0
   sensors: ^0.4.2+6
+  email_validator: ^2.0.1
+  google_fonts: 2.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -69,6 +71,7 @@ flutter:
     - assets/images/red_cart-removebg-preview.png
     - assets/images/cart-purple-removebg-preview.png
     - assets/images/astranaut_1-removebg-preview.png
+    - assets/images/Welcome.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
