@@ -32,7 +32,6 @@ Future main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('DOT-ENV => ${dotenv.env['API_KEY']}');
     return MultiProvider(
       providers: [
         /// ChangeNotifierProvider Builder with Initialised Objects Products

@@ -20,6 +20,8 @@ class AuthScreen extends StatelessWidget {
           PerspectiveZoomScreen(),
           SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(
@@ -67,9 +69,10 @@ class _AuthCardState extends State<AuthCard>
   RegExp numReg = RegExp(r".*[0-9].*");
   RegExp letterReg = RegExp(r".*[A-Za-z].*");
 
-  /// Animation Controller:-
+  /// Animation Controller & Animations:-
   AnimationController _animationController;
   Animation<Size> _heightAnimation;
+  Animation<double> _opacityAnimation;
 
   @override
   void initState() {
@@ -82,8 +85,10 @@ class _AuthCardState extends State<AuthCard>
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     final deviceSize = MediaQuery.of(context).size;
+
+    /// Animation Controller and Animations:-
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
     _heightAnimation = Tween<Size>(
       begin: Size(double.infinity, deviceSize.height * 0.67),
@@ -92,7 +97,10 @@ class _AuthCardState extends State<AuthCard>
       parent: _animationController,
       curve: Curves.elasticInOut,
     ));
-    _heightAnimation.addListener(() => setState(() {}));
+
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.decelerate),
+    );
   }
 
   @override
@@ -231,176 +239,193 @@ class _AuthCardState extends State<AuthCard>
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    print('height: ${deviceSize.height}');
-    return SingleChildScrollView(
-      child: Card(
-        elevation: 400,
-        shadowColor: Colors.deepPurpleAccent,
-        borderOnForeground: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        color: Color(0x192841).withOpacity(0.3),
-        margin: EdgeInsets.only(
-          right: deviceSize.width * 0.05,
-          top: deviceSize.height * 0.04,
-          left: deviceSize.width * 0.05,
-        ),
-        child: Container(
-          //height: _authMode == AuthMode.SignUp ? 450: 430,
-          //height: _authMode == AuthMode.SignUp ? deviceSize.height * 0.576 : deviceSize.height * 0.55,
-          height: _heightAnimation.value.height,
-          padding: EdgeInsets.all(20),
-          child: Form(
-            key: _form,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    width: deviceSize.width,
-                    margin: EdgeInsets.only(
-                      right: deviceSize.width * 0,
-                      top: deviceSize.height * 0.00,
-                      left: deviceSize.width * 0.005,
-                      bottom: deviceSize.height * 0,
-                    ),
-                    child: Text(
-                      _authMode == AuthMode.Login ? 'Login' : 'New User',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
+    return Card(
+      elevation: 400,
+      shadowColor: Colors.deepPurpleAccent,
+      borderOnForeground: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      color: Color(0x192841).withOpacity(0.4),
+      margin: EdgeInsets.only(
+        right: deviceSize.width * 0.05,
+        top: deviceSize.height * 0.04,
+        left: deviceSize.width * 0.05,
+      ),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.decelerate,
+        height: _authMode == AuthMode.SignUp
+            ? deviceSize.height * 0.70
+            : deviceSize.height * 0.67,
+        constraints: BoxConstraints(
+            minHeight: _authMode == AuthMode.SignUp
+                ? deviceSize.height * 0.70
+                : deviceSize.height * 0.60),
+        width: deviceSize.width * 0.95,
+        padding: EdgeInsets.all(20),
+        child: Form(
+          key: _form,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  width: deviceSize.width,
+                  margin: EdgeInsets.only(
+                    right: deviceSize.width * 0,
+                    top: deviceSize.height * 0.00,
+                    left: deviceSize.width * 0.005,
+                    bottom: deviceSize.height * 0,
+                  ),
+                  child: Text(
+                    _authMode == AuthMode.Login ? 'Login' : 'New User',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
-                    width: deviceSize.width,
-                    margin: EdgeInsets.only(
-                      right: deviceSize.width * 0,
-                      top: deviceSize.height * 0.0,
-                      left: deviceSize.width * 0.005,
-                      bottom: deviceSize.height * 0.03,
-                    ),
-                    child: Text(
-                      _authMode == AuthMode.Login
-                          ? 'Please SignIn to continue'
-                          : 'Please create an account',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: deviceSize.width,
+                  margin: EdgeInsets.only(
+                    right: deviceSize.width * 0,
+                    top: deviceSize.height * 0.0,
+                    left: deviceSize.width * 0.005,
+                    bottom: deviceSize.height * 0.03,
+                  ),
+                  child: Text(
+                    _authMode == AuthMode.Login
+                        ? 'Please SignIn to continue'
+                        : 'Please create an account',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextFormField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Enter Email',
-                      focusColor: Colors.white,
-                      fillColor: Colors.white,
-                      icon: Icon(Icons.email_outlined, color: Colors.cyan),
-                      labelStyle: TextStyle(color: Colors.white30),
-                      hintStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                      errorStyle: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Email is empty schmuck!';
-                      } else if (EmailValidator.validate(value) == false) {
-                        return 'Email is invalid schmuck!';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onSaved: (value) => _authData['email'] = value,
+                ),
+                TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Enter Email',
+                    focusColor: Colors.white,
+                    fillColor: Colors.white,
+                    icon: Icon(Icons.email_outlined, color: Colors.cyan),
+                    labelStyle: TextStyle(color: Colors.white30),
+                    hintStyle: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                    errorStyle: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Enter Password',
-                      icon: Icon(Icons.lock_outlined, color: Colors.cyan),
-                      labelStyle: TextStyle(color: Colors.white30),
-                      helperStyle: TextStyle(color: Colors.white30),
-                      hintStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                      errorStyle: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Email is empty schmuck!';
+                    } else if (EmailValidator.validate(value) == false) {
+                      return 'Email is invalid schmuck!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => _authData['email'] = value,
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Enter Password',
+                    icon: Icon(Icons.lock_outlined, color: Colors.cyan),
+                    labelStyle: TextStyle(color: Colors.white30),
+                    helperStyle: TextStyle(color: Colors.white30),
+                    hintStyle: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                    errorStyle: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
                     ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: true,
-                    onChanged: (value) => _checkPassword(value),
-                    onSaved: (value) => _authData['password'] = value,
                   ),
-                  _authMode == AuthMode.Login
-                      ? Text('')
-                      : TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            icon: Icon(Icons.lock_outlined, color: Colors.cyan),
-                            labelStyle: TextStyle(color: Colors.white30),
-                            hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700),
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          obscureText: true,
-                          validator: _authMode == AuthMode.SignUp
-                              ? (value) {
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match schmuck!';
-                                  }
-                                  return null;
-                                }
-                              : null,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  obscureText: true,
+                  onChanged: (value) => _checkPassword(value),
+                  onSaved: (value) => _authData['password'] = value,
+                ),
+                AnimatedContainer(
+                  constraints: BoxConstraints(
+                    minHeight: _authMode == AuthMode.SignUp ? 60 : 0,
+                    maxHeight: _authMode == AuthMode.SignUp ? 120 : 0,
+                  ),
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeIn,
+                  child: FadeTransition(
+                    opacity: _opacityAnimation,
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        icon: Icon(Icons.lock_outlined, color: Colors.cyan),
+                        labelStyle: TextStyle(color: Colors.white30),
+                        hintStyle: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w700),
+                        errorStyle: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
                         ),
-                  SizedBox(height: 8.5),
-                  _authMode == AuthMode.SignUp
-                      ? Container(
-                          width: deviceSize.width,
-                          padding: EdgeInsets.only(
-                            top: deviceSize.height * 0,
-                            right: deviceSize.width * 0.19,
-                            left: deviceSize.width * 0.1,
-                            bottom: deviceSize.height * 0.01,
-                          ),
-                          child: Text(_displayText,
-                              style: TextStyle(
-                                  color: Colors.white30, fontSize: 12)),
-                        )
-                      : Text(''),
-                  _authMode == AuthMode.SignUp
-                      ? Container(
-                          width: deviceSize.width * 0.56,
-                          child: LinearProgressIndicator(
-                            minHeight: 1,
-                            value: _passStrength,
-                            color: _passStrength <= 1 / 4
-                                ? Colors.red
-                                : _passStrength == 2 / 4
-                                    ? Colors.yellow
-                                    : _passStrength == 3 / 4
-                                        ? Colors.blue
-                                        : Colors.green,
-                            backgroundColor: Colors.blueGrey,
-                          ),
-                        )
-                      : Text(''),
-                  SizedBox(height: 14),
-                  _isLoading == true
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      obscureText: true,
+                      validator: _authMode == AuthMode.SignUp
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match schmuck!';
+                              }
+                              return null;
+                            }
+                          : null,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.5),
+                _authMode == AuthMode.SignUp
+                    ? Container(
+                        width: deviceSize.width,
+                        padding: EdgeInsets.only(
+                          top: deviceSize.height * 0,
+                          right: deviceSize.width * 0.19,
+                          left: deviceSize.width * 0.1,
+                          bottom: deviceSize.height * 0.01,
+                        ),
+                        child: Text(_displayText,
+                            style:
+                                TextStyle(color: Colors.white30, fontSize: 12)),
+                      )
+                    : Text(''),
+                _authMode == AuthMode.SignUp
+                    ? Container(
+                        width: deviceSize.width * 0.56,
+                        child: LinearProgressIndicator(
+                          minHeight: 1,
+                          value: _passStrength,
+                          color: _passStrength <= 1 / 4
+                              ? Colors.red
+                              : _passStrength == 2 / 4
+                                  ? Colors.yellow
+                                  : _passStrength == 3 / 4
+                                      ? Colors.blue
+                                      : Colors.green,
+                          backgroundColor: Colors.blueGrey,
+                        ),
+                      )
+                    : Text(''),
+                SizedBox(height: 14),
+                _isLoading == true
+                    ? CircularProgressIndicator()
+                    : Container(
+                        height: 50,
+                        padding: EdgeInsets.only(bottom: 10),
+                        width: double.infinity,
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 20,
                             onSurface: Colors.blueGrey,
@@ -418,20 +443,20 @@ class _AuthCardState extends State<AuthCard>
                                   : 'Create an account',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                  TextButton(
-                    onPressed: _toggleAuthMode,
-                    child: Text(
-                      _authMode == AuthMode.Login
-                          ? 'Need an account? Register'
-                          : 'Have an account? Sign in',
-                      style: TextStyle(
-                        color: Colors.cyan,
-                        fontWeight: FontWeight.bold,
                       ),
+                TextButton(
+                  onPressed: _toggleAuthMode,
+                  child: Text(
+                    _authMode == AuthMode.Login
+                        ? 'Need an account? Register'
+                        : 'Have an account? Sign in',
+                    style: TextStyle(
+                      color: Colors.cyan,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
