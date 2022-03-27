@@ -50,7 +50,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -65,6 +66,41 @@ class _AuthCardState extends State<AuthCard> {
   String _displayText = '* Password Strength: ';
   RegExp numReg = RegExp(r".*[0-9].*");
   RegExp letterReg = RegExp(r".*[A-Za-z].*");
+
+  /// Animation Controller:-
+  AnimationController _animationController;
+  Animation<Size> _heightAnimation;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    final deviceSize = MediaQuery.of(context).size;
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+
+    _heightAnimation = Tween<Size>(
+      begin: Size(double.infinity, deviceSize.height * 0.67),
+      end: Size(double.infinity, deviceSize.height * 0.72),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.elasticInOut,
+    ));
+    _heightAnimation.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _animationController.dispose();
+  }
 
   void _checkPassword(String value) {
     _password = value.trim();
@@ -183,31 +219,37 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.SignUp;
       });
+      _animationController.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      _animationController.reverse();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    print('height: ${deviceSize.height}');
     return SingleChildScrollView(
       child: Card(
-        elevation: 140,
-        shadowColor: Colors.white30,
+        elevation: 400,
+        shadowColor: Colors.deepPurpleAccent,
         borderOnForeground: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        color: Color(0xff23395d).withOpacity(0.3),
+        color: Color(0x192841).withOpacity(0.3),
         margin: EdgeInsets.only(
           right: deviceSize.width * 0.05,
           top: deviceSize.height * 0.04,
           left: deviceSize.width * 0.05,
         ),
         child: Container(
+          //height: _authMode == AuthMode.SignUp ? 450: 430,
+          //height: _authMode == AuthMode.SignUp ? deviceSize.height * 0.576 : deviceSize.height * 0.55,
+          height: _heightAnimation.value.height,
           padding: EdgeInsets.all(20),
           child: Form(
             key: _form,
@@ -243,7 +285,7 @@ class _AuthCardState extends State<AuthCard> {
                     ),
                     child: Text(
                       _authMode == AuthMode.Login
-                          ? 'Please signIn to continue'
+                          ? 'Please SignIn to continue'
                           : 'Please create an account',
                       style: TextStyle(
                         color: Colors.grey,

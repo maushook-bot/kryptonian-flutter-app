@@ -143,8 +143,10 @@ class CartScreen extends StatelessWidget {
                         orders.setLoading();
                         String auth =
                             Provider.of<Auth>(context, listen: false).token;
+                        String uid =
+                            Provider.of<Auth>(context, listen: false).userId;
                         await ordersData.addOrder(cartData.itemsList,
-                            cartData.itemSummaryPrice, auth);
+                            cartData.itemSummaryPrice);
                         cartData.clearCart();
                         orders.resetLoading();
 

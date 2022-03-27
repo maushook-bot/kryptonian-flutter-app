@@ -84,6 +84,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Future<void> _saveForm(Products productsData) async {
     final isValid = _form.currentState.validate();
     String auth = Provider.of<Auth>(context, listen: false).token;
+    String uid = Provider.of<Auth>(context, listen: false).userId;
     print('Valid: $isValid');
 
     if (!isValid) {
@@ -99,7 +100,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     /// Save Contents to Products Provider:-
     if (_editedProduct.id == null) {
       try {
-        await productsData.addProduct(_editedProduct, auth);
+        await productsData.addProduct(_editedProduct);
       } catch (error) {
         await showDialog<Null>(
           context: context,
@@ -137,7 +138,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Provider.of<Cart>(context, listen: false).deleteItems(_editedProduct.id);
       String auth = Provider.of<Auth>(context, listen: false).token;
 
-      await productsData.updateProduct(_editedProduct.id, _editedProduct, auth);
+      await productsData.updateProduct(_editedProduct.id, _editedProduct);
 
       print('id: ${_editedProduct.id}');
       print('title: ${_editedProduct.title}');

@@ -26,6 +26,11 @@ class Orders with ChangeNotifier {
   double productTotal = 0.0;
   bool isLoading;
 
+  final String auth;
+  final String uid;
+
+  Orders(this.auth, this.uid, this._orders);
+
   void setLoading() {
     isLoading = true;
     notifyListeners();
@@ -62,11 +67,12 @@ class Orders with ChangeNotifier {
     return productTotal;
   }
 
-  Future<void> fetchAllOrders(String auth) async {
+  Future<void> fetchAllOrders() async {
     // TODO:
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/orders.json', {'auth': auth});
+        '/orders.json',
+        {'auth': auth});
 
     try {
       final response = await http.get(url);
@@ -77,24 +83,26 @@ class Orders with ChangeNotifier {
       if (result != null) {
         result.forEach(
           (orderId, order) {
-            loadedOrder.add(
-              OrderItem(
-                id: orderId,
-                amount: order['amount'],
-                dateTime: DateTime.parse(order['dateTime']),
-                products: (order['products'] as List<dynamic>)
-                    .map(
-                      (cartItem) => CartItem(
-                        id: cartItem['id'],
-                        title: cartItem['title'],
-                        price: cartItem['price'],
-                        quantity: cartItem['quantity'],
-                        productId: cartItem['productId'],
-                      ),
-                    )
-                    .toList(),
-              ),
-            );
+            if (order['userId'] == uid) {
+              loadedOrder.add(
+                OrderItem(
+                  id: orderId,
+                  amount: order['amount'],
+                  dateTime: DateTime.parse(order['dateTime']),
+                  products: (order['products'] as List<dynamic>)
+                      .map(
+                        (cartItem) => CartItem(
+                          id: cartItem['id'],
+                          title: cartItem['title'],
+                          price: cartItem['price'],
+                          quantity: cartItem['quantity'],
+                          productId: cartItem['productId'],
+                        ),
+                      )
+                      .toList(),
+                ),
+              );
+            }
           },
         );
       }
@@ -106,17 +114,20 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(List<CartItem> cartProducts, double total, auth) async {
+  Future<void> addOrder(
+      List<CartItem> cartProducts, double total) async {
     // TODO:
     final timeStamp = DateTime.now();
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/orders.json', {'auth': auth});
+        '/orders.json',
+        {'auth': auth});
 
     final response = await http.post(
       url,
       body: json.encode(
         {
+          'userId': uid,
           'amount': total,
           'dateTime': timeStamp.toIso8601String(),
           'products': cartProducts.map(

@@ -51,7 +51,7 @@ class _UserProductItemState extends State<UserProductItem> {
       /// Right -> Left => DELETE
       cartData.deleteItems(widget.productId);
       try {
-        await productsData.deleteProduct(widget.productId, auth);
+        await productsData.deleteProduct(widget.productId);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Product Deleted!'),
@@ -90,7 +90,7 @@ class _UserProductItemState extends State<UserProductItem> {
     cartData.deleteItems(widget.productId);
     String auth = Provider.of<Auth>(context, listen: false).token;
     try {
-      await productsData.deleteProduct(widget.productId, auth);
+      await productsData.deleteProduct(widget.productId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Product Deleted!'),

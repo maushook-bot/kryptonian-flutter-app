@@ -33,14 +33,16 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    String auth = Provider.of<Auth>(context, listen: false).token;
+    bool isAuth = Provider.of<Auth>(context, listen: false).isAuth;
+    String uid = Provider.of<Auth>(context, listen: false).userId;
+    print('IsAuth => $isAuth');
     if (_isInit == true) {
       setState(() {
         _isLoading = true;
       });
 
       try {
-        await Provider.of<Products>(context).fetchProduct(auth);
+        await Provider.of<Products>(context).fetchProduct();
       } catch (error) {
         setState(() {
           _isLoading = false;

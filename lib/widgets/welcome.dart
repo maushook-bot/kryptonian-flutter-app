@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,10 +12,29 @@ class Welcome extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-              child: Image.asset(
-            'assets/images/Welcome.png',
-            fit: BoxFit.cover,
-          )),
+            child: Image.asset(
+              'assets/images/Welcome.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            child: Align(
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: deviceSize.height * 0.2,
+                  bottom: deviceSize.height * 0.0,
+                  right: deviceSize.height * 0.0,
+                  left: deviceSize.height * 0.0,
+                ),
+                child: Image.asset(
+                  'assets/images/asteroid-belt.png',
+                  width: 500,
+                  height: 180,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
           const Center(),
           Container(
             margin: const EdgeInsets.only(left: 25),

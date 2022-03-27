@@ -4,10 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
+  final String auth;
+  final String uid;
+
+  Products(this.auth, this.uid, this._items);
 
   List<Product> get item {
     return [..._items];
@@ -46,12 +49,22 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchProduct(auth) async {
-    print('FETCH => PRODUCTS');
+  Future<void> fetchProduct([bool filterByUser = false]) async {
+    print('FETCH => PRODUCTS, $uid');
     final List productIdList = [];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json', {'auth': auth});
+      'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+      '/products.json',
+      filterByUser
+          ? {
+              'auth': auth,
+              'orderBy': json.encode("userId"),
+              'equalTo': json.encode(uid),
+            }
+          : {
+              'auth': auth,
+            },
+    );
 
     try {
       final response = await http.get(url);
@@ -83,11 +96,12 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product newProduct, String auth) async {
+  Future<void> addProduct(Product newProduct) async {
     String newProductId;
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json', {'auth': auth});
+        '/products.json',
+        {'auth': auth});
     try {
       final response = await http.post(
         url,
@@ -99,6 +113,7 @@ class Products with ChangeNotifier {
             'qty': newProduct.qty,
             'imageUrl': newProduct.imageUrl,
             'isFavorite': newProduct.isFavorite,
+            'userId': uid,
           },
         ),
       );
@@ -121,12 +136,13 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> deleteProductTwin(String productId, String auth) async {
+  Future<void> deleteProductTwin(String productId) async {
     // TODO: Alternate Approach to Delete!
     print('DELETE => Product: ${productId}');
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products/${productId}.json', {'auth': auth});
+        '/products/${productId}.json',
+        {'auth': auth});
     final response = await http.delete(url);
 
     print('DELETE Response => ${response.statusCode}');
@@ -139,7 +155,7 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteProduct(String productId, String auth) async {
+  Future<void> deleteProduct(String productId) async {
     print('DELETE => Product: ${productId}');
     final existingProdIndex = _items.indexWhere((item) => item.id == productId);
     Product existingProduct = _items[existingProdIndex];
@@ -147,7 +163,8 @@ class Products with ChangeNotifier {
 
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products/${productId}.json', {'auth': auth});
+        '/products/${productId}.json',
+        {'auth': auth});
 
     final response = await http.delete(url);
     print('DELETE Response => ${response.statusCode}');
@@ -162,14 +179,15 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(String id, Product updatedProduct, String auth) async {
+  Future<void> updateProduct(String id, Product updatedProduct) async {
     //TODO: Work on this!!
     print('UPDATE => Product');
     final productIndex = _items.indexWhere((product) => product.id == id);
     if (productIndex >= 0) {
       final url = Uri.https(
           'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
-          '/products/${id}.json', {'auth': auth});
+          '/products/${id}.json',
+          {'auth': auth});
       final response = await http.patch(
         url,
         body: json.encode({

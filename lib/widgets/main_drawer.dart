@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
+import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/user_products_screen.dart';
+import 'package:flutter_complete_guide/widgets/welcome.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   void _tapHandler(BuildContext context, String routeName) {
@@ -47,6 +51,18 @@ class MainDrawer extends StatelessWidget {
           Divider(),
           _buildListTile(context, 'Manage Products', Icons.shopping_cart,
               UserProductsScreen.routeName),
+          Divider(),
+          ListTile(
+              leading: Icon(Icons.exit_to_app, size: 30),
+              title: Text(
+                'Logout',
+                style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed('/');
+                Provider.of<Auth>(context, listen: false).logout();
+              }),
         ],
       ),
     );

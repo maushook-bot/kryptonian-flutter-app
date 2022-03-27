@@ -19,7 +19,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     Future.delayed(Duration.zero).then(
       (_) {
         String auth = Provider.of<Auth>(context, listen: false).token;
-        Provider.of<Orders>(context, listen: false).fetchAllOrders(auth);
+        String uid = Provider.of<Auth>(context, listen: false).userId;
+        Provider.of<Orders>(context, listen: false).fetchAllOrders();
       },
     );
     super.initState();
@@ -35,7 +36,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       body: RefreshIndicator(
         onRefresh: () {
           String auth = Provider.of<Auth>(context, listen: false).token;
-          return ordersData.fetchAllOrders(auth);
+          String uid = Provider.of<Auth>(context, listen: false).userId;
+          return ordersData.fetchAllOrders();
         },
         child: ordersData.orders.length == 0
             ? _buildEmptyContent()
