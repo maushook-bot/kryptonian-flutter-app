@@ -1,13 +1,12 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 3.9 @@@
-/// @@@ App Features: Auto Login Feature & .env
+/// @@@ version: 4.0 @@@
+/// @@@ App Features: Animations and More
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
-import 'package:flutter_complete_guide/pallete/purplay.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
@@ -61,7 +60,7 @@ class MyApp extends StatelessWidget {
         builder: (context, authData, _) => MaterialApp(
           title: 'Krypton',
           theme: ThemeData(
-            primarySwatch: Purplay.kToDark,
+            primarySwatch: DeepBlue.kToDark,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
           ),

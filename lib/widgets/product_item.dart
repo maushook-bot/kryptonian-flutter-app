@@ -74,7 +74,7 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         child: GestureDetector(
           onTap: () => _selectProduct(context, productData, index),
-          child: _buildImageContent(productData),
+          child: _buildImageAnimatedWidget(productData),
         ),
         footer: GridTileBar(
           leading: Consumer<Product>(
@@ -148,6 +148,19 @@ class ProductItem extends StatelessWidget {
       productData.imageUrl,
       errorBuilder: (context, error, stackTrace) =>
           Image.asset('assets/images/placeholder.png'),
+    );
+  }
+
+  Widget _buildImageAnimatedWidget(Product productData) {
+    return Hero(
+      tag: productData.id,
+      child: FadeInImage(
+        imageErrorBuilder: (context, _, __) =>
+            Image.asset('assets/images/product-placeholder.png'),
+        placeholder: AssetImage('assets/images/product-placeholder.png'),
+        image: NetworkImage(productData.imageUrl),
+        fit: BoxFit.cover,
+      ),
     );
   }
 
