@@ -1,5 +1,5 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.0 @@@
+/// @@@ version: 4.1 @@@
 /// @@@ App Features: Animations and More
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@

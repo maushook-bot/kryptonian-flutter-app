@@ -55,14 +55,14 @@ class Welcome extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(
               top: deviceSize.height * 0,
-              bottom: deviceSize.height * 0.55,
+              bottom: deviceSize.height * 0.15,
               right: deviceSize.height * 0,
               left: deviceSize.height * 0,
             ),
             child: Image.asset(
-              'assets/images/asteroid-belt-1.png',
-              width: 500,
-              height: 180,
+              'assets/images/Black-Hole.png',
+              width: 460,
+              height: 420,
               fit: BoxFit.cover,
             ),
           ),
@@ -74,9 +74,9 @@ class Welcome extends StatelessWidget {
               left: deviceSize.height * 0,
             ),
             child: Image.asset(
-              'assets/images/Black-Hole.png',
-              width: 460,
-              height: 420,
+              'assets/images/asteroid-belt-1.png',
+              width: 500,
+              height: 180,
               fit: BoxFit.cover,
             ),
           ),
