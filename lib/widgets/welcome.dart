@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/helpers/custom_route.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,6 +19,21 @@ class Welcome extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff18203d).withOpacity(1),
+                  Color(0xff18203d).withOpacity(1),
+                  Colors.black.withOpacity(1),
+                  Color(0xff232c51),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0, 0, 1, 1],
+              ),
+            ),
+          ),
           Positioned(
             child: Align(
               child: Container(
@@ -33,6 +50,34 @@ class Welcome extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: deviceSize.height * 0,
+              bottom: deviceSize.height * 0.55,
+              right: deviceSize.height * 0,
+              left: deviceSize.height * 0,
+            ),
+            child: Image.asset(
+              'assets/images/asteroid-belt-1.png',
+              width: 500,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: deviceSize.height * 0,
+              bottom: deviceSize.height * 0.15,
+              right: deviceSize.height * 0,
+              left: deviceSize.height * 0,
+            ),
+            child: Image.asset(
+              'assets/images/Black-Hole.png',
+              width: 460,
+              height: 420,
+              fit: BoxFit.cover,
             ),
           ),
           const Center(),
@@ -71,11 +116,14 @@ class Welcome extends StatelessWidget {
                   ),
                   // color: Colors.green,
                   child: ElevatedButton(
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed(AuthScreen.routeName),
+                    onPressed: () => Navigator.of(context).pushReplacement(
+                        CustomRoute(builder: (ctx) => AuthScreen())),
+                    //Navigator.of(context).pushNamed(AuthScreen.routeName),
+
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(199, 50),
-                        primary: const Color(0xffC65466),
+                        //primary: const Color(0xffC65466),
+                        primary: Colors.lightBlue.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18))),
                     child: Row(

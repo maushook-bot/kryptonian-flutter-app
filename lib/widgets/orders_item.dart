@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/cart.dart' show CartItem;
 import 'package:intl/intl.dart';
 
@@ -32,60 +33,76 @@ class _OrdersItemState extends State<OrdersItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(15),
-      elevation: 10,
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.add_shopping_cart, size: 40),
-            title: Text('\$${widget.amount.toStringAsFixed(2)}'),
-            subtitle: Text('${DateFormat.yMMMd().format(widget.dateTime)} '
-                '${DateFormat.Hm().format(widget.dateTime)}'),
-            trailing: IconButton(
-              icon: _showCardFlag
-                  ? Icon(Icons.expand_less)
-                  : Icon(Icons.expand_more),
-              onPressed: _showCardHandler,
-            ),
+    return SingleChildScrollView(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 250),
+        curve: Curves.decelerate,
+        height: _showCardFlag
+            ? min(widget.products.length * 20 + 200, 250).toDouble()
+            : 110,
+        child: Card(
+          margin: EdgeInsets.all(15),
+          elevation: 10,
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(
+                  Icons.add_shopping_cart,
+                  size: 40,
+                  color: DeepBlue.kToDark,
+                ),
+                title: Text('\$${widget.amount.toStringAsFixed(2)}'),
+                subtitle: Text('${DateFormat.yMMMd().format(widget.dateTime)} '
+                    '${DateFormat.Hm().format(widget.dateTime)}'),
+                trailing: IconButton(
+                  icon: _showCardFlag
+                      ? Icon(Icons.expand_less, color: DeepBlue.kToDark)
+                      : Icon(Icons.expand_more, color: DeepBlue.kToDark),
+                  onPressed: _showCardHandler,
+                ),
+              ),
+              _showCardFlag
+                  ? _buildDetailsCard(context)
+                  : _buildEmptyContent(context),
+            ],
           ),
-          _showCardFlag
-              ? _buildDetailsCard(context)
-              : _buildEmptyContent(context),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildDetailsCard(BuildContext context) {
-    return Container(
-      height: min(widget.products.length * 10 + 100, 180).toDouble(),
-      width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.all(10),
-        child: ListView.builder(
-          itemCount: widget.products.length,
-          itemBuilder: (context, index) => ListTile(
-            leading: Icon(Icons.view_list_sharp),
-            title: Text(widget.products[index].title),
-            trailing: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Icons.shopping_cart),
-                Container(
-                  width: 25,
-                  alignment: Alignment.centerLeft,
-                  child: Text('${widget.products[index].quantity}x'),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  width: 65,
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                      '\$${(widget.products[index].price * widget.products[index].quantity).toStringAsFixed(2)}'),
-                ),
-              ],
+    return Expanded(
+      flex: _showCardFlag ? 1 : 0,
+      child: Container(
+        height: min(widget.products.length * 10 + 100, 180).toDouble(),
+        width: double.infinity,
+        child: Card(
+          margin: EdgeInsets.all(10),
+          child: ListView.builder(
+            itemCount: widget.products.length,
+            itemBuilder: (context, index) => ListTile(
+              leading: Icon(Icons.view_list_sharp, color: DeepBlue.kToDark),
+              title: Text(widget.products[index].title),
+              trailing: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.shopping_cart, color: DeepBlue.kToDark),
+                  Container(
+                    width: 25,
+                    alignment: Alignment.centerLeft,
+                    child: Text('${widget.products[index].quantity}x'),
+                  ),
+                  SizedBox(width: 10),
+                  Container(
+                    width: 65,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                        '\$${(widget.products[index].price * widget.products[index].quantity).toStringAsFixed(2)}'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
@@ -32,7 +33,11 @@ class MainDrawer extends StatelessWidget {
           ),
           SizedBox(height: 20),
           ListTile(
-            leading: Icon(Icons.shop, size: 30),
+            leading: Icon(
+              Icons.shop,
+              size: 30,
+              color: DeepBlue.kToDark,
+            ),
             title: Text(
               'Shop',
               style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
@@ -41,7 +46,11 @@ class MainDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.credit_card, size: 30),
+            leading: Icon(
+              Icons.credit_card,
+              size: 30,
+              color: DeepBlue.kToDark,
+            ),
             title: Text(
               'Orders',
               style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
@@ -53,7 +62,11 @@ class MainDrawer extends StatelessWidget {
               UserProductsScreen.routeName),
           Divider(),
           ListTile(
-              leading: Icon(Icons.exit_to_app, size: 30),
+              leading: Icon(
+                Icons.exit_to_app,
+                size: 30,
+                color: DeepBlue.kToDark,
+              ),
               title: Text(
                 'Logout',
                 style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
@@ -71,7 +84,11 @@ class MainDrawer extends StatelessWidget {
   ListTile _buildListTile(
       BuildContext context, String title, IconData icon, route) {
     return ListTile(
-      leading: Icon(icon, size: 30),
+      leading: Icon(
+        icon,
+        size: 30,
+        color: DeepBlue.kToDark,
+      ),
       title: Text(
         title,
         style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),

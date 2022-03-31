@@ -5,6 +5,7 @@ import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:provider/provider.dart';
+import 'package:stepper_touch/stepper_touch.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   static const routeName = '/product-details';
@@ -106,12 +107,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               [
                 SizedBox(height: 10),
                 Card(
+                  color: DeepBlue.kToDark,
+                  shadowColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
+                      borderRadius: BorderRadius.circular(13)),
                   margin: EdgeInsets.all(10),
                   elevation: 20.0,
                   child: Container(
-                    color: DeepBlue.kToDark,
                     padding: EdgeInsets.all(20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -139,15 +141,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ),
                 Card(
+                  color: DeepBlue.kToDark,
+                  shadowColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
                   margin: EdgeInsets.all(10),
                   elevation: 20.0,
                   child: Container(
-                    color: DeepBlue.kToDark,
                     padding: EdgeInsets.all(0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.add_shopping_cart_outlined,
                             size: 30, color: Colors.white),
@@ -163,45 +168,73 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 color: Colors.white60),
                           ),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            IconButton(
-                              onPressed: () => _productIncreaseQty(
-                                  products, loadedProduct, cartData),
-                              icon: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: Colors.white,
-                              ),
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.loose,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(66),
+                              color: Colors.white.withOpacity(0.15),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(0.5),
-                                color: Colors.lightBlueAccent,
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 20,
-                                minHeight: 20,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Consumer<Products>(
-                                  builder: (_, products, __) => Text(
-                                    products.item[index].qty.toString(),
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
+                            constraints: BoxConstraints(
+                              maxWidth: 38,
+                              maxHeight: 85,
+                            ),
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  height: 20,
+                                  child: IconButton(
+                                    onPressed: () => _productIncreaseQty(
+                                        products, loadedProduct, cartData),
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
                                   ),
                                 ),
-                              ),
+                                SizedBox(height: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    color: Colors.white,
+                                  ),
+                                  constraints: BoxConstraints(
+                                    minWidth: 38,
+                                    minHeight: 38,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Consumer<Products>(
+                                      builder: (_, products, __) => Text(
+                                        products.item[index].qty.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blueAccent),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 19,
+                                  child: IconButton(
+                                    onPressed: () => _productReduceQty(
+                                        products, loadedProduct, cartData),
+                                    icon: Icon(
+                                      Icons.remove,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            IconButton(
-                                onPressed: () => _productReduceQty(
-                                    products, loadedProduct, cartData),
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white,
-                                ))
-                          ],
+                          ),
                         ),
                       ],
                     ),

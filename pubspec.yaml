@@ -32,6 +32,7 @@ dependencies:
   google_fonts: 2.2.0
   shared_preferences: ^2.0.13
   flutter_dotenv: ^5.0.2
+  stepper_touch: ^0.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -79,6 +80,7 @@ flutter:
     - assets/images/asteroid-belt-1.png
     - assets/images/asteroid-belt-1-rotated.png
     - assets/images/product-placeholder.png
+    - assets/images/Black-Hole.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
