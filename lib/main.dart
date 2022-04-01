@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.1 @@@
-/// @@@ App Features: Animations and More
+/// @@@ version: 4.2 @@@
+/// @@@ App Features: Welcome Screen Crazy Animation ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

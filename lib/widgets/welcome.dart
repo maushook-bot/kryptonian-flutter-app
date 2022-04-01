@@ -1,10 +1,39 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/helpers/custom_route.dart';
-import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
+  AnimationController _controllerBh;
+  AnimationController _controllerAst;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _controllerBh =
+        AnimationController(vsync: this, duration: Duration(minutes: 3))
+          ..repeat();
+    _controllerAst =
+        AnimationController(vsync: this, duration: Duration(minutes: 30))
+          ..repeat();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controllerBh.dispose();
+    _controllerAst.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -43,12 +72,7 @@ class Welcome extends StatelessWidget {
                   right: deviceSize.height * 0.0,
                   left: deviceSize.height * 0.0,
                 ),
-                child: Image.asset(
-                  'assets/images/asteroid-belt.png',
-                  width: 500,
-                  height: 180,
-                  fit: BoxFit.cover,
-                ),
+                child: _buildBottomAnimatedAsteroid(context, deviceSize),
               ),
             ),
           ),
@@ -59,12 +83,7 @@ class Welcome extends StatelessWidget {
               right: deviceSize.height * 0,
               left: deviceSize.height * 0,
             ),
-            child: Image.asset(
-              'assets/images/Black-Hole.png',
-              width: 460,
-              height: 420,
-              fit: BoxFit.cover,
-            ),
+            child: _buildAnimatedBlackHole(context, deviceSize),
           ),
           Container(
             padding: EdgeInsets.only(
@@ -73,12 +92,7 @@ class Welcome extends StatelessWidget {
               right: deviceSize.height * 0,
               left: deviceSize.height * 0,
             ),
-            child: Image.asset(
-              'assets/images/asteroid-belt-1.png',
-              width: 500,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
+            child: _buildTopAnimatedAsteroid(context, deviceSize),
           ),
           const Center(),
           Container(
@@ -151,6 +165,60 @@ class Welcome extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedBlackHole(BuildContext context, Size deviceSize) {
+    return AnimatedBuilder(
+      animation: _controllerBh,
+      builder: (_, ch) {
+        return Transform.rotate(
+          angle: _controllerBh.value * 2 * pi,
+          child: ch,
+        );
+      },
+      child: Image.asset(
+        'assets/images/Black-Hole.png',
+        width: 460,
+        height: 420,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  Widget _buildTopAnimatedAsteroid(BuildContext context, Size deviceSize) {
+    return AnimatedBuilder(
+      animation: _controllerAst,
+      builder: (_, ch) {
+        return Transform.rotate(
+          angle: -_controllerAst.value * 2 * pi,
+          child: ch,
+        );
+      },
+      child: Image.asset(
+        'assets/images/asteroid-belt-1.png',
+        width: 500,
+        height: 180,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildBottomAnimatedAsteroid(BuildContext context, Size deviceSize) {
+    return AnimatedBuilder(
+      animation: _controllerAst,
+      builder: (_, ch) {
+        return Transform.rotate(
+          angle: _controllerAst.value * 10 * pi,
+          child: ch,
+        );
+      },
+      child: Image.asset(
+        'assets/images/asteroid-belt.png',
+        width: 500,
+        height: 180,
+        fit: BoxFit.cover,
       ),
     );
   }
