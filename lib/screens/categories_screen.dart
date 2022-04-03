@@ -9,7 +9,10 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesData = Provider.of<Categories>(context, listen: false).getCategories;
+    final categoriesData = Provider.of<Categories>(context, listen: false).categories;
+    final categoriesItem = Provider.of<Categories>(context).categoriesItems;
+    //print('Categories-Item => ${categoriesItem}');
+
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(

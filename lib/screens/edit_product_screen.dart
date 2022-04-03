@@ -1,11 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
+import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:provider/provider.dart';
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -18,15 +18,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
+  String _selectCategory;
 
   var _editedProduct = Product(
-    id: null,
-    title: '',
-    description: '',
-    price: 0,
-    imageUrl: '',
-    qty: 0,
-  );
+      id: null,
+      title: '',
+      description: '',
+      price: 0,
+      imageUrl: '',
+      qty: 0,
+      categoryId: '');
 
   var _isInit = true;
   var isLoading = false;
@@ -37,11 +38,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'price': '',
     'description': '',
     'imageUrl': '',
+    'category': '',
   };
 
   @override
   void initState() {
     // TODO: implement initState
+    _selectCategory = '';
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
@@ -51,6 +54,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     // TODO: implement didChangeDependencies
     if (_isInit) {
       final String productId = ModalRoute.of(context).settings.arguments;
+      final catData = Provider.of<Categories>(context, listen: false);
       if (productId != null) {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
@@ -60,7 +64,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'price': _editedProduct.price.toString(),
           'description': _editedProduct.description,
           'imageUrl': '',
-          'category': 'c8',
+          'category': catData.fetchCategoryTitle(_editedProduct.categoryId),
         };
 
         /// When controller used in TextFormField initial value can't be set
@@ -148,6 +152,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context, listen: true);
     final cartData = Provider.of<Cart>(context, listen: true);
+    final catData = Provider.of<Categories>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -324,13 +329,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             return null;
                           },
                         ),
-                        TextFormField(
-                          initialValue: _initValues['category'],
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration:
-                              InputDecoration(labelText: 'Product Category'),
-                          keyboardType: TextInputType.text,
-                          onSaved: (value) {
+                        SizedBox(height: 10),
+                        DropDownFormField(
+                          titleText: 'Product Category',
+                          hintText: 'Select a category',
+                          value: _selectCategory,
+                          onSaved: (newValue) {
+                            setState(() {
+                              _selectCategory = newValue;
+                            });
                             _editedProduct = Product(
                               id: _editedProduct.id,
                               title: _editedProduct.title,
@@ -338,15 +345,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: _editedProduct.price,
                               imageUrl: _editedProduct.imageUrl,
                               isFavorite: _editedProduct.isFavorite,
-                              categoryId: value,
+                              categoryId: _selectCategory,
                             );
                           },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Select a Category Schmuck';
-                            }
-                            return null;
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectCategory = newValue;
+                            });
                           },
+                          dataSource: catData.categoryDropDownItems,
+                          textField: 'display',
+                          valueField: 'value',
                         ),
                       ],
                     ),

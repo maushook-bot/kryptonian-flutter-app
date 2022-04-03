@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  dropdown_formfield:
+    dependency: "direct main"
+    description:
+      name: dropdown_formfield
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   email_validator:
     dependency: "direct main"
     description:

@@ -33,6 +33,7 @@ dependencies:
   shared_preferences: ^2.0.13
   flutter_dotenv: ^5.0.2
   stepper_touch: ^0.0.1
+  dropdown_formfield: ^0.1.4
 
 
   # The following adds the Cupertino Icons font to your application.

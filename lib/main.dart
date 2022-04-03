@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
 /// @@@ version: 4.3 @@@
-/// @@@ App Features: Product Categories & Fixed Product Item Qty ✨
+/// @@@ App Features: Product Categories & Category DropDown✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
