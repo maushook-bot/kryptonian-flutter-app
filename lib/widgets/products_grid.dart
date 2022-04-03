@@ -5,14 +5,19 @@ import 'package:provider/provider.dart';
 
 class productsGrid extends StatelessWidget {
   final bool showFavoriteOnly;
-  productsGrid({this.showFavoriteOnly});
+  final String categoryId;
+  final bool categoryFlag;
+  productsGrid({this.showFavoriteOnly, this.categoryId, this.categoryFlag});
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
-    final products = productData.item;
-    final filteredProducts =
-        showFavoriteOnly ? productData.favoriteItems : products;
+    //final productData = Provider.of<Products>(context);
+    //final products = productData.item;
+    //final filteredProducts = showFavoriteOnly ? productData.favoriteItems : products;
+
+    /// Fetch Products by Categories:-
+    final filteredProducts = Provider.of<Products>(context)
+        .fetchProductByCategories(categoryId, categoryFlag);
 
     return GridView.builder(
       itemCount: filteredProducts.length,

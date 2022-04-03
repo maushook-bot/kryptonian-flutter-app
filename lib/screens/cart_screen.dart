@@ -14,6 +14,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
     final ordersData = Provider.of<Orders>(context);
+    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('My Cart'),
@@ -28,7 +29,7 @@ class CartScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Container(
-              height: 400,
+              height: deviceSize.height * 0.69,
               child: _buildListView(cartData),
             ),
           ],

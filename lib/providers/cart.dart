@@ -20,6 +20,7 @@ class CartItem {
 class Cart with ChangeNotifier {
   /// Map with Product Id as key & value as CarItem
   Map<String, CartItem> _items = {};
+  int item_qty = 0;
 
   Map<String, CartItem> get items {
     return {..._items};
@@ -30,7 +31,6 @@ class Cart with ChangeNotifier {
   }
 
   double get itemSummaryPrice {
-    print('GET => itemSummaryPrice');
     var _itemPriceTotal = 0.0;
 
     _items.forEach(
@@ -46,7 +46,16 @@ class Cart with ChangeNotifier {
   }
 
   int getItemQuantity(String productId) {
-    if(_items.containsKey(productId)) {
+    _items.forEach(
+      (key, item) {
+        if (item.productId == productId) {
+          item_qty = item.quantity;
+        }
+      },
+    );
+    if (_items.containsKey(productId)) {
+      return item_qty;
+    } else {
       return 0;
     }
   }

@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.2 @@@
-/// @@@ App Features: Welcome Screen Crazy Animation ✨
+/// @@@ version: 4.3 @@@
+/// @@@ App Features: Product Categories & Fixed Product Item Qty ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
+import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/product_details_screen.dart';
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
+        ChangeNotifierProvider(create: (ctx) => Categories()),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (ctx) => Orders('', '', []),
           update: (ctx, auth, previousOrders) => Orders(
@@ -57,7 +60,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Consumer<Auth>(
-        builder: (context, authData, _) => MaterialApp(
+        builder: (ctx, authData, _) => MaterialApp(
           title: 'Krypton',
           theme: ThemeData(
             primarySwatch: DeepBlue.kToDark,
@@ -67,7 +70,7 @@ class MyApp extends StatelessWidget {
           //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
           routes: {
             '/': (ctx) => authData.isAuth
-                ? ProductsOverviewScreen()
+                ? CategoriesScreen()
                 : FutureBuilder(
                     future: authData.tryAutoLogin(),
                     builder: (context, snapshot) =>
@@ -75,6 +78,7 @@ class MyApp extends StatelessWidget {
                             ? MySplashScreen()
                             : Welcome(),
                   ),
+            CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
             AuthScreen.routeName: (ctx) => AuthScreen(),
             ProductsOverviewScreen.routeName: (ctx) => ProductsOverviewScreen(),
             ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),

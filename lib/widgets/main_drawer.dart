@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
-import 'package:flutter_complete_guide/screens/auth_screen.dart';
+import 'package:flutter_complete_guide/screens/cart_screen.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
+import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
 import 'package:flutter_complete_guide/screens/user_products_screen.dart';
-import 'package:flutter_complete_guide/widgets/welcome.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
-  void _tapHandler(BuildContext context, String routeName) {
-    Navigator.of(context).pushNamed(routeName);
+  void _tapHandler(BuildContext context, String routeName, arguments) {
+    Navigator.of(context).pushNamed(routeName, arguments: arguments);
   }
 
   @override
@@ -42,7 +43,21 @@ class MainDrawer extends StatelessWidget {
               'Shop',
               style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
             ),
-            onTap: () => _tapHandler(context, '/'),
+            onTap: () => _tapHandler(
+                context, ProductsOverviewScreen.routeName, ['', false]),
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(
+              Icons.category,
+              size: 30,
+              color: DeepBlue.kToDark,
+            ),
+            title: Text(
+              'All Categories',
+              style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
+            ),
+            onTap: () => _tapHandler(context, CategoriesScreen.routeName, null),
           ),
           Divider(),
           ListTile(
@@ -52,14 +67,17 @@ class MainDrawer extends StatelessWidget {
               color: DeepBlue.kToDark,
             ),
             title: Text(
-              'Orders',
+              'My Orders',
               style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
             ),
-            onTap: () => _tapHandler(context, OrdersScreen.routeName),
+            onTap: () => _tapHandler(context, OrdersScreen.routeName, null),
           ),
           Divider(),
-          _buildListTile(context, 'Manage Products', Icons.shopping_cart,
-              UserProductsScreen.routeName),
+          _buildListTile(context, 'My Cart', Icons.add_shopping_cart_sharp,
+              CartScreen.routeName, null),
+          Divider(),
+          _buildListTile(context, 'Manage Products', Icons.manage_accounts,
+              UserProductsScreen.routeName, null),
           Divider(),
           ListTile(
               leading: Icon(
@@ -82,7 +100,7 @@ class MainDrawer extends StatelessWidget {
   }
 
   ListTile _buildListTile(
-      BuildContext context, String title, IconData icon, route) {
+      BuildContext context, String title, IconData icon, route, arguments) {
     return ListTile(
       leading: Icon(
         icon,
@@ -93,7 +111,7 @@ class MainDrawer extends StatelessWidget {
         title,
         style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
       ),
-      onTap: () => _tapHandler(context, route),
+      onTap: () => _tapHandler(context, route, arguments),
     );
   }
 }

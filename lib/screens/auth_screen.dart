@@ -189,14 +189,16 @@ class _AuthCardState extends State<AuthCard>
         await Provider.of<Auth>(context, listen: false)
             .login(
                 _authData['email'], _authData['password'], 'signInWithPassword')
-            .then((_) => Navigator.of(context)
-                .pushNamed(ProductsOverviewScreen.routeName));
+            .then((_) => Navigator.of(context).pushNamed(
+                ProductsOverviewScreen.routeName,
+                arguments: ['', false]));
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password'], 'signUp')
-            .then((_) => Navigator.of(context)
-                .pushNamed(ProductsOverviewScreen.routeName));
+            .then((_) => Navigator.of(context).pushNamed(
+                ProductsOverviewScreen.routeName,
+                arguments: ['', false]));
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';
@@ -398,8 +400,8 @@ class _AuthCardState extends State<AuthCard>
                             bottom: deviceSize.height * 0.01,
                           ),
                           child: Text(_displayText,
-                              style:
-                                  TextStyle(color: Colors.white30, fontSize: 12)),
+                              style: TextStyle(
+                                  color: Colors.white30, fontSize: 12)),
                         )
                       : Text(''),
                   _authMode == AuthMode.SignUp
@@ -470,8 +472,6 @@ class _AuthCardState extends State<AuthCard>
   }
 
   Widget _buildPasswordHelper(BuildContext context, Size deviceSize) {
-    print(deviceSize.height);
-    print(deviceSize.width);
     return Container(
       padding: EdgeInsets.all(10),
       //margin: EdgeInsets.only(top: 10, left: 48, right: 45),
@@ -514,9 +514,7 @@ class _AuthCardState extends State<AuthCard>
           Row(
             children: [
               Icon(
-                _passStrength >= 1
-                    ? Icons.check_circle
-                    : Icons.check_circle,
+                _passStrength >= 1 ? Icons.check_circle : Icons.check_circle,
                 size: 20,
                 color: _passStrength >= 1
                     ? Colors.lightGreenAccent

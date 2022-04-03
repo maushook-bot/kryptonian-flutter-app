@@ -20,8 +20,19 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite == true).toList();
   }
 
+  /// Filter Products by Categories if category flag == true else all items:-
+  List<Product> fetchProductByCategories(String catId, bool categoryFlag) {
+    return categoryFlag == true && catId != ''
+        ? _items.where((product) => product.categoryId == catId).toList()
+        : item;
+  }
+
   Product findById(String id) {
     return _items.firstWhere((product) => product.id == id);
+  }
+
+   int getIndexByProductId(String id) {
+    return _items.indexWhere((product) => product.id == id);
   }
 
   void addProductQuantity(String id, int index) {
@@ -51,7 +62,6 @@ class Products with ChangeNotifier {
 
   Future<void> fetchProduct([bool filterByUser = false]) async {
     print('FETCH => PRODUCTS, $uid');
-    final List productIdList = [];
     final url = Uri.https(
       'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
       '/products.json',
@@ -70,7 +80,6 @@ class Products with ChangeNotifier {
       final response = await http.get(url);
       final Map<String, dynamic> result = json.decode(response.body);
       final List<Product> LoadedProduct = [];
-      print('LoadedProduct => ${result}');
       result['error'] == 'Permission denied'
           ? throw 'Authentication Failed Permission Denied!'
           : result.forEach(
@@ -83,12 +92,13 @@ class Products with ChangeNotifier {
                     description: product['description'],
                     isFavorite: product['isFavorite'],
                     imageUrl: product['imageUrl'],
+                    categoryId: product['categoryId'],
                   ),
                 );
               },
             );
       _items = LoadedProduct;
-      print(_items);
+      //print(_items);
       notifyListeners();
     } catch (error) {
       print('ERROR => $error');
@@ -114,6 +124,7 @@ class Products with ChangeNotifier {
             'imageUrl': newProduct.imageUrl,
             'isFavorite': newProduct.isFavorite,
             'userId': uid,
+            'categoryId': newProduct.categoryId,
           },
         ),
       );
@@ -127,6 +138,7 @@ class Products with ChangeNotifier {
         price: newProduct.price,
         description: newProduct.description,
         imageUrl: newProduct.imageUrl,
+        categoryId: newProduct.categoryId,
       );
       _items.add(product);
       notifyListeners();
@@ -145,7 +157,7 @@ class Products with ChangeNotifier {
         {'auth': auth});
     final response = await http.delete(url);
 
-    print('DELETE Response => ${response.statusCode}');
+    //print('DELETE Response => ${response.statusCode}');
     if (response.statusCode == 200) {
       _items.removeWhere((product) => product.id == productId);
     } else if (response.statusCode >= 400) {
@@ -171,7 +183,7 @@ class Products with ChangeNotifier {
     if (response.statusCode == 200) {
       existingProduct = null;
     } else if (response.statusCode >= 400) {
-      print('DELETE => Failed: ${response.body}');
+      //print('DELETE => Failed: ${response.body}');
       _items.insert(existingProdIndex, existingProduct);
       notifyListeners();
       throw HttpException('Delete Failed. Try Again Later!');
@@ -196,9 +208,10 @@ class Products with ChangeNotifier {
           'description': updatedProduct.description,
           'qty': updatedProduct.qty,
           'imageUrl': updatedProduct.imageUrl,
+          'categoryId': updatedProduct.categoryId,
         }),
       );
-      print(response.body);
+      //print(response.body);
       _items[productIndex] = updatedProduct;
       notifyListeners();
     }

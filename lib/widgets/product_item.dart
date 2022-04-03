@@ -52,7 +52,6 @@ class ProductItem extends StatelessWidget {
   void _dismissLeftHandler(DismissDirection direction, Product productData,
       Products productsData, Cart cartData) {
     /// Left Swipe
-
     productsData.decreaseProductQuantity(productData.id, index);
     cartData.reduceItems(productData.id);
     print('CALL => CartUpdateHandler, Decrease Qty');
@@ -65,7 +64,7 @@ class ProductItem extends StatelessWidget {
     /// if listen: false => notifyListeners cannot trigger
     /// Consumer<Product> can be wrapped on the Child that needs rebuild when notified
     /// Child Argument in Consumer doesn't rebuild
-    final productData = Provider.of<Product>(context, listen: false);
+    final productData = Provider.of<Product>(context, listen: true);
     final cartData = Provider.of<Cart>(context, listen: true);
     final productsData = Provider.of<Products>(context, listen: true);
 
@@ -112,7 +111,12 @@ class ProductItem extends StatelessWidget {
             builder: (_, products, __) => Badge(
               color: Colors.black54,
               textColor: Colors.white,
-              value: products.item[index].qty.toString(),
+              //value: products.item[index].qty.toString(),
+              //value: cartData.getItemQuantity(products.item[index].id).toString(),
+              value: cartData
+                  .getItemQuantity(
+                      products.item[products.getIndexByProductId(productData.id)].id)
+                  .toString(),
               child: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () {

@@ -60,6 +60,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'price': _editedProduct.price.toString(),
           'description': _editedProduct.description,
           'imageUrl': '',
+          'category': 'c8',
         };
 
         /// When controller used in TextFormField initial value can't be set
@@ -124,13 +125,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
         /// Pop this screen:-
         Navigator.of(context).pop();
-
-        /// Stats:-
-        print('id: ${_editedProduct.id}');
-        print('title: ${_editedProduct.title}');
-        print('description: ${_editedProduct.description}');
-        print('price: ${_editedProduct.price}');
-        print('imageUrl: ${_editedProduct.imageUrl}');
       }
     } else {
       /// EDIT Existing Products:-
@@ -139,13 +133,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
       String auth = Provider.of<Auth>(context, listen: false).token;
 
       await productsData.updateProduct(_editedProduct.id, _editedProduct);
-
-      print('id: ${_editedProduct.id}');
-      print('title: ${_editedProduct.title}');
-      print('description: ${_editedProduct.description}');
-      print('price: ${_editedProduct.price}');
-      print('imageUrl: ${_editedProduct.imageUrl}');
-      print('qty: ${_editedProduct.qty}');
 
       // Reset Loading Indicator:-
       setState(() {
@@ -177,7 +164,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: isLoading == true
           ? Center(child: CircularProgressIndicator())
           : Container(
-              height: 480,
+              height: 490,
               padding: const EdgeInsets.all(16.0),
               child: Card(
                 elevation: 10.0,
@@ -212,6 +199,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: _editedProduct.price,
                               imageUrl: _editedProduct.imageUrl,
                               isFavorite: _editedProduct.isFavorite,
+                              categoryId: _editedProduct.categoryId,
                             );
                           },
                         ),
@@ -242,6 +230,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: double.parse(value),
                               imageUrl: _editedProduct.imageUrl,
                               isFavorite: _editedProduct.isFavorite,
+                              categoryId: _editedProduct.categoryId,
                             );
                           },
                         ),
@@ -298,6 +287,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                     price: _editedProduct.price,
                                     imageUrl: value,
                                     isFavorite: _editedProduct.isFavorite,
+                                    categoryId: _editedProduct.categoryId,
                                   );
                                 },
                                 onFieldSubmitted: (_) {
@@ -321,6 +311,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: _editedProduct.price,
                               imageUrl: _editedProduct.imageUrl,
                               isFavorite: _editedProduct.isFavorite,
+                              categoryId: _editedProduct.categoryId,
                             );
                           },
                           validator: (value) {
@@ -329,6 +320,30 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             }
                             if (value.length < 10) {
                               return 'Should be at least 10 chars along Schmuck';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          initialValue: _initValues['category'],
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration:
+                              InputDecoration(labelText: 'Product Category'),
+                          keyboardType: TextInputType.text,
+                          onSaved: (value) {
+                            _editedProduct = Product(
+                              id: _editedProduct.id,
+                              title: _editedProduct.title,
+                              description: _editedProduct.description,
+                              price: _editedProduct.price,
+                              imageUrl: _editedProduct.imageUrl,
+                              isFavorite: _editedProduct.isFavorite,
+                              categoryId: value,
+                            );
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Select a Category Schmuck';
                             }
                             return null;
                           },

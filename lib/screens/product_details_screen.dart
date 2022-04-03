@@ -58,7 +58,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final loadedProduct =
         Provider.of<Products>(context, listen: false).findById(productId);
     final products = Provider.of<Products>(context, listen: false);
-    final cartData = Provider.of<Cart>(context, listen: false);
+    final cartData = Provider.of<Cart>(context, listen: true);
 
     void _productIncreaseQty(
         Products products, Product productData, Cart cartData) {
@@ -211,7 +211,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Consumer<Products>(
                                       builder: (_, products, __) => Text(
-                                        products.item[index].qty.toString(),
+                                        cartData
+                                            .getItemQuantity(
+                                                products.item[index].id)
+                                            .toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: 14,

@@ -35,7 +35,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     // TODO: implement didChangeDependencies
     bool isAuth = Provider.of<Auth>(context, listen: false).isAuth;
     String uid = Provider.of<Auth>(context, listen: false).userId;
-    print('IsAuth => $isAuth');
     if (_isInit == true) {
       setState(() {
         _isLoading = true;
@@ -78,6 +77,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List data = ModalRoute.of(context).settings.arguments;
+    String categoryId = data[0];
+    bool categoryFlag = data[1];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Krypton'),
@@ -121,7 +124,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : productsGrid(showFavoriteOnly: _showFavoriteOnly),
+          : productsGrid(
+              showFavoriteOnly: _showFavoriteOnly,
+              categoryId: categoryId,
+              categoryFlag: categoryFlag,
+            ),
       drawer: MainDrawer(),
     );
   }

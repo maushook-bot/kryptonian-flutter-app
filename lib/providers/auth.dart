@@ -102,9 +102,6 @@ class Auth with ChangeNotifier {
       _authTimer.cancel();
       _authTimer = null;
     }
-    print('IsAuth: $isAuth');
-    print('Token: $_token');
-    print('Expiry: $_expiryDate');
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();
@@ -113,7 +110,6 @@ class Auth with ChangeNotifier {
   }
 
   void _autoLogout() {
-    print('AUTO-LOGOUT');
     if (_authTimer != null) {
       _authTimer.cancel();
     }
