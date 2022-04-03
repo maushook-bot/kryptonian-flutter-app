@@ -212,8 +212,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     child: Consumer<Products>(
                                       builder: (_, products, __) => Text(
                                         cartData
-                                            .getItemQuantity(
-                                                products.item[index].id)
+                                            .getItemQuantity(products
+                                                .item[products
+                                                    .getIndexByProductId(
+                                                        loadedProduct.id)]
+                                                .id)
                                             .toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(

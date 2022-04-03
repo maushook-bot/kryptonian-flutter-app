@@ -78,7 +78,7 @@ class Orders with ChangeNotifier {
       final response = await http.get(url);
       final Map<String, dynamic> result = json.decode(response.body);
       final List<OrderItem> loadedOrder = [];
-      print(result);
+      //print(result);
 
       if (result != null) {
         result.forEach(

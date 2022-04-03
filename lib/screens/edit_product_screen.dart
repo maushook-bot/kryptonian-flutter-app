@@ -44,7 +44,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    _selectCategory = '';
+    //_selectCategory = '';
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
@@ -153,6 +153,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final productsData = Provider.of<Products>(context, listen: true);
     final cartData = Provider.of<Cart>(context, listen: true);
     final catData = Provider.of<Categories>(context, listen: false);
+    final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -169,7 +170,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: isLoading == true
           ? Center(child: CircularProgressIndicator())
           : Container(
-              height: 490,
+              height: deviceSize.height * 0.74,
               padding: const EdgeInsets.all(16.0),
               child: Card(
                 elevation: 10.0,
@@ -332,7 +333,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         SizedBox(height: 10),
                         DropDownFormField(
                           titleText: 'Product Category',
-                          hintText: 'Select a category',
+                          hintText: 'Choose a category',
                           value: _selectCategory,
                           onSaved: (newValue) {
                             setState(() {
@@ -356,6 +357,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           dataSource: catData.categoryDropDownItems,
                           textField: 'display',
                           valueField: 'value',
+                        ),
+                        SizedBox(height: 10),
+                        TextFormField(
+                          initialValue: _initValues['category'],
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration:
+                          InputDecoration(labelText: 'Selected Product Category'),
+                          keyboardType: TextInputType.text,
                         ),
                       ],
                     ),
