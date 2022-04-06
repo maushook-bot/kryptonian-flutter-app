@@ -4,6 +4,6 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: false
-  image_path: "assets/icon/Krypton_launcher.png"
+  image_path: "assets/icon/KB_model_v2_launcher.png"
   adaptive_icon_background: "assets/icon/Krypton_launcher_adaptive_back.png"
-  adaptive_icon_foreground: "assets/icon/Krypton_launcher_adaptive_fore.png"
+  adaptive_icon_foreground: "assets/icon/KB_model_v2_launcher_adaptive_fore.png"
