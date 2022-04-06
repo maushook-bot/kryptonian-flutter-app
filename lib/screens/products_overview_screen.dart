@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/widgets/badge.dart';
@@ -15,6 +16,7 @@ enum FilterOptions {
 
 class ProductsOverviewScreen extends StatefulWidget {
   static const routeName = '/product-overview';
+
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
@@ -77,6 +79,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lightData = Provider.of<Light>(context);
+    final isDark = lightData.themeDark;
     final List data = ModalRoute.of(context).settings.arguments;
     String categoryId = data[0];
     bool categoryFlag = data[1];
@@ -85,6 +89,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       appBar: AppBar(
         title: Text('Krypton'),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(isDark ? Icons.wb_sunny: Icons.nights_stay_sharp),
+            color: isDark ? Colors.yellow: Colors.grey,
+            onPressed: lightData.toggleLights,
+          ),
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             onSelected: (FilterOptions selectedValue) {
@@ -129,7 +138,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               categoryId: categoryId,
               categoryFlag: categoryFlag,
             ),
-      drawer: MainDrawer(),
+      //drawer: MainDrawer(),
     );
   }
 }

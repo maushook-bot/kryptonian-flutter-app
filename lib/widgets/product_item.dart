@@ -114,8 +114,8 @@ class ProductItem extends StatelessWidget {
               //value: products.item[index].qty.toString(),
               //value: cartData.getItemQuantity(products.item[index].id).toString(),
               value: cartData
-                  .getItemQuantity(
-                      products.item[products.getIndexByProductId(productData.id)].id)
+                  .getItemQuantity(products
+                      .item[products.getIndexByProductId(productData.id)].id)
                   .toString(),
               child: IconButton(
                 icon: Icon(Icons.shopping_cart),
@@ -124,9 +124,15 @@ class ProductItem extends StatelessWidget {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Item Added to Cart 🛒'),
+                      content: Text(
+                        'Item Added to Cart 🛒',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       duration: Duration(seconds: 3),
-                      backgroundColor: Colors.black,
+                      backgroundColor: AppBarTheme.of(context).backgroundColor,
                       action: SnackBarAction(
                         onPressed: () {
                           products.decreaseProductQuantity(

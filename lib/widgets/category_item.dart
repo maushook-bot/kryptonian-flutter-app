@@ -23,6 +23,43 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _buildGridContent(context);
+  }
+
+  Widget _buildGridContent(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: GridTile(
+        child: GestureDetector(
+          onTap: () => selectCategory(context),
+          child: _buildImageAnimatedWidget(imgUrl),
+        ),
+        footer: GridTileBar(
+          leading: Icon(Icons.apps),
+          backgroundColor: Colors.black87,
+          title: Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageAnimatedWidget(String imageUrl) {
+    return Hero(
+      tag: imageUrl,
+      child: FadeInImage(
+        imageErrorBuilder: (context, _, __) =>
+            Image.asset('assets/images/product-placeholder.png'),
+        placeholder: AssetImage('assets/images/product-placeholder.png'),
+        image: NetworkImage(imageUrl),
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildInkWellContent(BuildContext context) {
     return InkWell(
       onTap: () => selectCategory(context),
       splashColor: Theme.of(context).primaryColor,

@@ -71,7 +71,7 @@ class UserProductsScreen extends StatelessWidget {
                     ),
                   ),
       ),
-      drawer: MainDrawer(),
+      //drawer: MainDrawer(),
     );
   }
 }

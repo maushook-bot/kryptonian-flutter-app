@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:flutter_complete_guide/widgets/orders_item.dart';
@@ -51,7 +52,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
       ),
-      drawer: MainDrawer(),
+      //drawer: MainDrawer(),
     );
   }
 
@@ -62,12 +63,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
         children: [
           Text(
             'Nothing here 🎧',
-            style: TextStyle(fontSize: 32, color: Colors.black54),
+            style: TextStyle(
+                fontSize: 32,
+                color: Provider.of<Light>(context).themeDark
+                    ? Colors.white60
+                    : Colors.black54),
           ),
           SizedBox(height: 3),
           Text(
             'Place an Order to get started!',
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+            style: TextStyle(
+                fontSize: 16,
+                color: Provider.of<Light>(context).themeDark
+                    ? Colors.white60
+                    : Colors.black54),
           )
         ],
       ),

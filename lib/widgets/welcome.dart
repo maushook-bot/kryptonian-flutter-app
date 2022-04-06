@@ -21,7 +21,7 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(minutes: 3))
           ..repeat();
     _controllerAst =
-        AnimationController(vsync: this, duration: Duration(minutes: 30))
+        AnimationController(vsync: this, duration: Duration(minutes: 15))
           ..repeat();
     super.initState();
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart' show Cart;
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
@@ -23,8 +25,9 @@ class CartScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Card(
-              elevation: 7,
-              margin: EdgeInsets.all(12),
+              color: Colors.blueGrey.withOpacity(0.2),
+              elevation: 20,
+              margin: EdgeInsets.all(14),
               child: _buildTopHeader(context, cartData, ordersData),
             ),
             SizedBox(height: 20),
@@ -146,14 +149,15 @@ class CartScreen extends StatelessWidget {
                             Provider.of<Auth>(context, listen: false).token;
                         String uid =
                             Provider.of<Auth>(context, listen: false).userId;
-                        await ordersData.addOrder(cartData.itemsList,
-                            cartData.itemSummaryPrice);
+                        await ordersData.addOrder(
+                            cartData.itemsList, cartData.itemSummaryPrice);
                         cartData.clearCart();
                         orders.resetLoading();
 
                         productsData.clearProductQuantity();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            backgroundColor: DeepBlue.kToDark,
                             content: Text(
                               'Order Placed Successfully 🛒',
                               style: TextStyle(color: Colors.white),
@@ -169,7 +173,12 @@ class CartScreen extends StatelessWidget {
                   ? Center(child: CircularProgressIndicator())
                   : Text(
                       'ORDER NOW',
-                      style: TextStyle(fontWeight: FontWeight.w800),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: Provider.of<Light>(context).themeDark
+                            ? Colors.deepOrange
+                            : DeepBlue.kToDark,
+                      ),
                     ),
             ),
           ),

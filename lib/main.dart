@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.3 @@@
-/// @@@ App Features: Product Categories & Category DropDown & Bug Fixes✨
+/// @@@ version: 4.5 @@@
+/// @@@ App Features: Dark and Light Mode Switch | FLUTTER-42 ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -10,6 +10,7 @@ import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
+        ChangeNotifierProvider(create: (ctx) => Light()),
         ChangeNotifierProvider(create: (ctx) => Categories()),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (ctx) => Orders('', '', []),
@@ -66,6 +68,9 @@ class MyApp extends StatelessWidget {
             primarySwatch: DeepBlue.kToDark,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
+            appBarTheme: AppBarTheme(
+              backgroundColor: DeepBlue.kToDark,
+            ),
           ),
           //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
           routes: {
@@ -87,6 +92,39 @@ class MyApp extends StatelessWidget {
             UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
             EditProductScreen.routeName: (ctx) => EditProductScreen(),
           },
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: DeepBlue.kToDark,
+            canvasColor: Colors.black,
+            cardColor: DeepBlue.kToDark.shade500,
+            accentColor: Colors.deepOrange,
+            colorScheme: ColorScheme(
+              background: DeepBlue.kToDark,
+              onBackground: Colors.white,
+              brightness: Brightness.dark,
+              primaryVariant: DeepBlue.kToDark,
+              primary: DeepBlue.kToDark,
+              secondaryVariant: Colors.deepOrange,
+              secondary: Colors.deepOrange,
+              surface: Colors.white,
+              onSurface: Colors.white,
+              error: Colors.red,
+              onError: Colors.red,
+              onPrimary: DeepBlue.kToDark,
+              onSecondary: Colors.deepOrange,
+            ),
+            fontFamily: 'Lato',
+            iconTheme: IconThemeData(
+              color: Colors.deepOrange,
+            ),
+            appBarTheme: AppBarTheme(
+              backgroundColor: DeepBlue.kToDark,
+            ),
+          ),
+          themeMode: Provider.of<Light>(ctx).themeDark
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );

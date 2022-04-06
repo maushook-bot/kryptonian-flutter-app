@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/cart.dart' show CartItem;
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class OrdersItem extends StatefulWidget {
   final String id;
@@ -49,15 +51,28 @@ class _OrdersItemState extends State<OrdersItem> {
                 leading: Icon(
                   Icons.add_shopping_cart,
                   size: 40,
-                  color: DeepBlue.kToDark,
+                  //color: DeepBlue.kToDark,
+                  color: Provider.of<Light>(context).themeDark
+                      ? Colors.lightBlueAccent
+                      : DeepBlue.kToDark,
                 ),
                 title: Text('\$${widget.amount.toStringAsFixed(2)}'),
                 subtitle: Text('${DateFormat.yMMMd().format(widget.dateTime)} '
                     '${DateFormat.Hm().format(widget.dateTime)}'),
                 trailing: IconButton(
                   icon: _showCardFlag
-                      ? Icon(Icons.expand_less, color: DeepBlue.kToDark)
-                      : Icon(Icons.expand_more, color: DeepBlue.kToDark),
+                      ? Icon(
+                          Icons.expand_less,
+                          color: Provider.of<Light>(context).themeDark
+                              ? Colors.lightBlueAccent
+                              : DeepBlue.kToDark,
+                        )
+                      : Icon(
+                          Icons.expand_more,
+                          color: Provider.of<Light>(context).themeDark
+                              ? Colors.lightBlueAccent
+                              : DeepBlue.kToDark,
+                        ),
                   onPressed: _showCardHandler,
                 ),
               ),
@@ -82,13 +97,23 @@ class _OrdersItemState extends State<OrdersItem> {
           child: ListView.builder(
             itemCount: widget.products.length,
             itemBuilder: (context, index) => ListTile(
-              leading: Icon(Icons.view_list_sharp, color: DeepBlue.kToDark),
+              leading: Icon(
+                Icons.view_list_sharp,
+                color: Provider.of<Light>(context).themeDark
+                    ? Colors.lightBlueAccent
+                    : DeepBlue.kToDark,
+              ),
               title: Text(widget.products[index].title),
               trailing: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Icon(Icons.shopping_cart, color: DeepBlue.kToDark),
+                  Icon(
+                    Icons.shopping_cart,
+                    color: Provider.of<Light>(context).themeDark
+                        ? Colors.lightBlueAccent
+                        : DeepBlue.kToDark,
+                  ),
                   Container(
                     width: 25,
                     alignment: Alignment.centerLeft,

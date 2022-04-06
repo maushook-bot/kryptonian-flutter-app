@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   void _tapHandler(BuildContext context, String routeName, arguments) {
-    Navigator.of(context).pushNamed(routeName, arguments: arguments);
+    Navigator.of(context).popAndPushNamed(routeName, arguments: arguments);
   }
 
   @override
@@ -23,7 +23,7 @@ class MainDrawer extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).appBarTheme.backgroundColor,
             child: Text(
               'Hello Mash!',
               style: TextStyle(
@@ -37,7 +37,7 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.shop,
               size: 30,
-              color: DeepBlue.kToDark,
+              color: DeepBlue.kToDark.shade50,
             ),
             title: Text(
               'Shop',
@@ -51,7 +51,7 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.category,
               size: 30,
-              color: DeepBlue.kToDark,
+              color: DeepBlue.kToDark.shade50,
             ),
             title: Text(
               'All Categories',
@@ -64,7 +64,7 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.credit_card,
               size: 30,
-              color: DeepBlue.kToDark,
+              color: DeepBlue.kToDark.shade50,
             ),
             title: Text(
               'My Orders',
@@ -83,7 +83,7 @@ class MainDrawer extends StatelessWidget {
               leading: Icon(
                 Icons.exit_to_app,
                 size: 30,
-                color: DeepBlue.kToDark,
+                color: DeepBlue.kToDark.shade50,
               ),
               title: Text(
                 'Logout',
@@ -105,7 +105,7 @@ class MainDrawer extends StatelessWidget {
       leading: Icon(
         icon,
         size: 30,
-        color: DeepBlue.kToDark,
+        color: DeepBlue.kToDark.shade50,
       ),
       title: Text(
         title,

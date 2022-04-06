@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/perspective_zoom_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
@@ -189,16 +190,16 @@ class _AuthCardState extends State<AuthCard>
         await Provider.of<Auth>(context, listen: false)
             .login(
                 _authData['email'], _authData['password'], 'signInWithPassword')
-            .then((_) => Navigator.of(context).pushNamed(
-                ProductsOverviewScreen.routeName,
-                arguments: ['', false]));
+            .then((_) => Navigator.of(context).popAndPushNamed(
+                CategoriesScreen.routeName));
+                //arguments: ['', false]));
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password'], 'signUp')
             .then((_) => Navigator.of(context).pushNamed(
-                ProductsOverviewScreen.routeName,
-                arguments: ['', false]));
+            CategoriesScreen.routeName));
+                //arguments: ['', false]));
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';

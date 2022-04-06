@@ -89,7 +89,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               title: Container(
                 decoration: BoxDecoration(
                     color: isShrink
-                        ? Theme.of(context).primaryColor
+                        ? AppBarTheme.of(context).backgroundColor
                         : Colors.black54,
                     borderRadius: BorderRadius.circular(12)),
                 width: _deviceSize.width,
