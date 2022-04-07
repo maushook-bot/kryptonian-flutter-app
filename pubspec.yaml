@@ -36,6 +36,7 @@ dependencies:
   dropdown_formfield: ^0.1.4
   flutter_launcher_icons: ^0.9.2
   flutter_app_name: ^0.1.1
+  animated_theme_switcher: ^2.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

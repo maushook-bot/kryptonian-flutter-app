@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
+import 'package:flutter_complete_guide/screens/new_category_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 
@@ -45,7 +48,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void initState() {
     // TODO: implement initState
     //_selectCategory = '';
-    _imageUrlFocusNode.addListener(_updateImageUrl);
+    //_imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
@@ -84,7 +87,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _updateImageUrl() {}
+  void _showCategoryDrawer() {
+    final deviceSize = MediaQuery.of(context).size;
+    showModalBottomSheet(
+      elevation: 10,
+      //constraints: BoxConstraints(maxHeight: deviceSize.height * 0.3),
+      context: context,
+      isScrollControlled: true,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () => {},
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: NewCategoryDrawer(),
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _saveForm(Products productsData) async {
     final isValid = _form.currentState.validate();
@@ -167,6 +189,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 20,
+        backgroundColor: Provider.of<Light>(context).themeDark
+            ? Colors.deepOrange
+            : DeepBlue.kToDark,
+        foregroundColor:
+            Provider.of<Light>(context).themeDark ? Colors.black : Colors.white,
+        child: Icon(Icons.add),
+        onPressed: () => _showCategoryDrawer(),
+      ),
       body: isLoading == true
           ? Center(child: CircularProgressIndicator())
           : Container(
@@ -184,7 +216,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         TextFormField(
                           initialValue: _initValues['title'],
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(labelText: 'Title'),
+                          decoration: InputDecoration(
+                            labelText: 'Title',
+                            labelStyle: TextStyle(
+                              color: Provider.of<Light>(context).themeDark
+                                  ? Colors.white60
+                                  : Colors.black.withOpacity(0.55),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.white60
+                                    : Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                          ),
                           textInputAction: TextInputAction.next,
                           onFieldSubmitted: (_) {
                             FocusScope.of(context)
@@ -212,7 +272,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         TextFormField(
                           initialValue: _initValues['price'],
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(labelText: 'Price'),
+                          decoration: InputDecoration(
+                            labelText: 'Price',
+                            labelStyle: TextStyle(
+                              color: Provider.of<Light>(context).themeDark
+                                  ? Colors.white60
+                                  : Colors.black.withOpacity(0.55),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.white60
+                                    : Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                          ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.number,
                           focusNode: _priceFocusNode,
@@ -266,8 +354,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                decoration:
-                                    InputDecoration(labelText: 'Image Url'),
+                                decoration: InputDecoration(
+                                  labelText: 'Image Url',
+                                  labelStyle: TextStyle(
+                                    color: Provider.of<Light>(context).themeDark
+                                        ? Colors.white60
+                                        : Colors.black.withOpacity(0.55),
+                                  ),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          Provider.of<Light>(context).themeDark
+                                              ? Colors.white60
+                                              : Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          Provider.of<Light>(context).themeDark
+                                              ? Colors.lightBlueAccent
+                                              : DeepBlue.kToDark,
+                                    ),
+                                  ),
+                                  border: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          Provider.of<Light>(context).themeDark
+                                              ? Colors.lightBlueAccent
+                                              : DeepBlue.kToDark,
+                                    ),
+                                  ),
+                                ),
                                 keyboardType: TextInputType.url,
                                 controller: _imageUrlController,
                                 textInputAction: TextInputAction.done,
@@ -306,7 +424,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         TextFormField(
                           initialValue: _initValues['description'],
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(labelText: 'Description'),
+                          decoration: InputDecoration(
+                            labelText: 'Description',
+                            labelStyle: TextStyle(
+                              color: Provider.of<Light>(context).themeDark
+                                  ? Colors.white60
+                                  : Colors.black.withOpacity(0.55),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.white60
+                                    : Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                          ),
                           maxLines: 3,
                           keyboardType: TextInputType.multiline,
                           onSaved: (value) {
@@ -362,8 +508,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         TextFormField(
                           initialValue: _initValues['category'],
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration:
-                          InputDecoration(labelText: 'Selected Product Category'),
+                          decoration: InputDecoration(
+                            labelText: 'Selected Product Category',
+                            labelStyle: TextStyle(
+                              color: Provider.of<Light>(context).themeDark
+                                  ? Colors.white60
+                                  : Colors.black.withOpacity(0.55),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.white60
+                                    : Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Provider.of<Light>(context).themeDark
+                                    ? Colors.lightBlueAccent
+                                    : DeepBlue.kToDark,
+                              ),
+                            ),
+                          ),
                           keyboardType: TextInputType.text,
                         ),
                       ],

@@ -33,6 +33,7 @@ class Product with ChangeNotifier {
     String description,
     double price,
     String imageUrl,
+    String catId,
   }) {
     return Product(
       id: id ?? this.id,
@@ -40,6 +41,7 @@ class Product with ChangeNotifier {
       price: price ?? this.price,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
+      categoryId: catId ?? this.categoryId,
     );
   }
 }

@@ -1,12 +1,13 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.5 @@@
-/// @@@ App Features: Dark and Light Mode Switch | FLUTTER-42 ✨
+/// @@@ version: 4.7 @@@
+/// @@@ App Features: KB-91 Categories from FireBase ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
 
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/pallete/deepBlue.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
@@ -25,6 +26,8 @@ import 'package:flutter_complete_guide/screens/user_products_screen.dart';
 import 'package:flutter_complete_guide/widgets/welcome.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'data/category_dummy_data.dart';
+import 'helpers/theme_config.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -34,6 +37,9 @@ Future main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isPlatformDark =
+        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+    final initTheme = isPlatformDark ? nightTheme : dayTheme;
     return MultiProvider(
       providers: [
         /// ChangeNotifierProvider Builder with Initialised Objects Products
@@ -49,9 +55,16 @@ class MyApp extends StatelessWidget {
             previousProducts == null ? [] : previousProducts.item,
           ),
         ),
+        ChangeNotifierProxyProvider<Auth, Categories>(
+          create: (ctx) => Categories('', []),
+          update: (ctx, auth, previousCategories) => Categories(
+            auth.token,
+            previousCategories == null ? [] : previousCategories.categories,
+          ),
+        ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
         ChangeNotifierProvider(create: (ctx) => Light()),
-        ChangeNotifierProvider(create: (ctx) => Categories()),
+        //ChangeNotifierProvider(create: (ctx) => Categories('', categoryDummyData)),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (ctx) => Orders('', '', []),
           update: (ctx, auth, previousOrders) => Orders(
@@ -62,69 +75,34 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Consumer<Auth>(
-        builder: (ctx, authData, _) => MaterialApp(
-          title: 'Krypton',
-          theme: ThemeData(
-            primarySwatch: DeepBlue.kToDark,
-            accentColor: Colors.deepOrange,
-            fontFamily: 'Lato',
-            appBarTheme: AppBarTheme(
-              backgroundColor: DeepBlue.kToDark,
-            ),
+        builder: (ctx, authData, _) => ThemeProvider(
+          initTheme: initTheme,
+          builder: (_, myTheme) => MaterialApp(
+            title: 'Krypton',
+            theme: myTheme,
+            //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
+            routes: {
+              '/': (ctx) => authData.isAuth
+                  ? CategoriesScreen()
+                  : FutureBuilder(
+                      future: authData.tryAutoLogin(),
+                      builder: (context, snapshot) =>
+                          snapshot.connectionState == ConnectionState.waiting
+                              ? MySplashScreen()
+                              : Welcome(),
+                    ),
+              CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
+              AuthScreen.routeName: (ctx) => AuthScreen(),
+              ProductsOverviewScreen.routeName: (ctx) =>
+                  ProductsOverviewScreen(),
+              ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
+              CartScreen.routeName: (ctx) => CartScreen(),
+              OrdersScreen.routeName: (ctx) => OrdersScreen(),
+              UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+              EditProductScreen.routeName: (ctx) => EditProductScreen(),
+            },
+            debugShowCheckedModeBanner: false,
           ),
-          //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
-          routes: {
-            '/': (ctx) => authData.isAuth
-                ? CategoriesScreen()
-                : FutureBuilder(
-                    future: authData.tryAutoLogin(),
-                    builder: (context, snapshot) =>
-                        snapshot.connectionState == ConnectionState.waiting
-                            ? MySplashScreen()
-                            : Welcome(),
-                  ),
-            CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
-            AuthScreen.routeName: (ctx) => AuthScreen(),
-            ProductsOverviewScreen.routeName: (ctx) => ProductsOverviewScreen(),
-            ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
-            CartScreen.routeName: (ctx) => CartScreen(),
-            OrdersScreen.routeName: (ctx) => OrdersScreen(),
-            UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-            EditProductScreen.routeName: (ctx) => EditProductScreen(),
-          },
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: DeepBlue.kToDark,
-            canvasColor: Colors.black,
-            cardColor: DeepBlue.kToDark.shade500,
-            accentColor: Colors.deepOrange,
-            colorScheme: ColorScheme(
-              background: DeepBlue.kToDark,
-              onBackground: Colors.white,
-              brightness: Brightness.dark,
-              primaryVariant: DeepBlue.kToDark,
-              primary: DeepBlue.kToDark,
-              secondaryVariant: Colors.deepOrange,
-              secondary: Colors.deepOrange,
-              surface: Colors.white,
-              onSurface: Colors.white,
-              error: Colors.red,
-              onError: Colors.red,
-              onPrimary: DeepBlue.kToDark,
-              onSecondary: Colors.deepOrange,
-            ),
-            fontFamily: 'Lato',
-            iconTheme: IconThemeData(
-              color: Colors.deepOrange,
-            ),
-            appBarTheme: AppBarTheme(
-              backgroundColor: DeepBlue.kToDark,
-            ),
-          ),
-          themeMode: Provider.of<Light>(ctx).themeDark
-              ? ThemeMode.dark
-              : ThemeMode.light,
-          debugShowCheckedModeBanner: false,
         ),
       ),
     );

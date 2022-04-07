@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
+import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:provider/provider.dart';
 
@@ -74,11 +75,15 @@ class CartItem extends StatelessWidget {
           padding: EdgeInsets.all(8),
           child: ListTile(
             leading: CircleAvatar(
+              backgroundColor: Provider.of<Light>(context).themeDark
+                  ? Colors.black
+                  : AppBarTheme.of(context).backgroundColor,
               radius: 28,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: FittedBox(
-                  child: Text('\$${price}'),
+                  child:
+                      Text('\$${price}', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),

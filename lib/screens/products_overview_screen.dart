@@ -1,4 +1,6 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/helpers/theme_config.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
@@ -85,60 +87,70 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     String categoryId = data[0];
     bool categoryFlag = data[1];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Krypton'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(isDark ? Icons.wb_sunny: Icons.nights_stay_sharp),
-            color: isDark ? Colors.yellow: Colors.grey,
-            onPressed: lightData.toggleLights,
-          ),
-          PopupMenuButton(
-            icon: Icon(Icons.more_vert),
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.favorites) {
-                  _showFavoriteOnly = true;
-                } else {
-                  _showFavoriteOnly = false;
-                }
-              });
-            },
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Only Favorites'),
-                value: FilterOptions.favorites,
+    return ThemeSwitchingArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Krypton'),
+          actions: <Widget>[
+            ThemeSwitcher(
+              clipper: ThemeSwitcherCircleClipper(),
+              builder: (context) => IconButton(
+                icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
+                color: isDark ? Colors.yellow : Colors.grey,
+                onPressed: () {
+                  lightData.toggleLights();
+                  ThemeSwitcher.of(context).changeTheme(
+                    theme: isDark ? dayTheme : nightTheme,
+                  );
+                },
               ),
-              PopupMenuItem(
-                child: Text('Show All'),
-                value: FilterOptions.all,
+            ),
+            PopupMenuButton(
+              icon: Icon(Icons.more_vert),
+              onSelected: (FilterOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FilterOptions.favorites) {
+                    _showFavoriteOnly = true;
+                  } else {
+                    _showFavoriteOnly = false;
+                  }
+                });
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  child: Text('Only Favorites'),
+                  value: FilterOptions.favorites,
+                ),
+                PopupMenuItem(
+                  child: Text('Show All'),
+                  value: FilterOptions.all,
+                ),
+              ],
+            ),
+            Consumer<Cart>(
+              builder: (_, cartData, ch) => Badge(
+                child: ch,
+                value: cartData.itemCount.toString(),
               ),
-            ],
-          ),
-          Consumer<Cart>(
-            builder: (_, cartData, ch) => Badge(
-              child: ch,
-              value: cartData.itemCount.toString(),
+              child: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(CartScreen.routeName),
+              ),
             ),
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(CartScreen.routeName),
-            ),
-          ),
-        ],
+          ],
+        ),
+        body: _isLoading == true
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : productsGrid(
+                showFavoriteOnly: _showFavoriteOnly,
+                categoryId: categoryId,
+                categoryFlag: categoryFlag,
+              ),
+        //drawer: MainDrawer(),
       ),
-      body: _isLoading == true
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : productsGrid(
-              showFavoriteOnly: _showFavoriteOnly,
-              categoryId: categoryId,
-              categoryFlag: categoryFlag,
-            ),
-      //drawer: MainDrawer(),
     );
   }
 }
