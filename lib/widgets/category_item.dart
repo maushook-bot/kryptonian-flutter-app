@@ -47,15 +47,12 @@ class CategoryItem extends StatelessWidget {
   }
 
   Widget _buildImageAnimatedWidget(String imageUrl) {
-    return Hero(
-      tag: imageUrl,
-      child: FadeInImage(
-        imageErrorBuilder: (context, _, __) =>
-            Image.asset('assets/images/product-placeholder.png'),
-        placeholder: AssetImage('assets/images/product-placeholder.png'),
-        image: NetworkImage(imageUrl),
-        fit: BoxFit.cover,
-      ),
+    return FadeInImage(
+      imageErrorBuilder: (context, _, __) =>
+          Image.asset('assets/images/product-placeholder.png'),
+      placeholder: AssetImage('assets/images/product-placeholder.png'),
+      image: NetworkImage(imageUrl),
+      fit: BoxFit.cover,
     );
   }
 

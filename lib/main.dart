@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
 /// @@@ version: 4.7 @@@
-/// @@@ App Features: KB-91 Categories from FireBase ✨
+/// @@@ App Features: KB-Liquid Swipe and Bug Fixes ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -18,6 +18,8 @@ import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/edit_product_screen.dart';
+import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
+import 'package:flutter_complete_guide/screens/liquid_welcome_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/product_details_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
@@ -64,7 +66,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
         ChangeNotifierProvider(create: (ctx) => Light()),
-        //ChangeNotifierProvider(create: (ctx) => Categories('', categoryDummyData)),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (ctx) => Orders('', '', []),
           update: (ctx, auth, previousOrders) => Orders(
@@ -83,14 +84,15 @@ class MyApp extends StatelessWidget {
             //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
             routes: {
               '/': (ctx) => authData.isAuth
-                  ? CategoriesScreen()
+                  ? LiquidAppSwitchScreen()
                   : FutureBuilder(
                       future: authData.tryAutoLogin(),
                       builder: (context, snapshot) =>
                           snapshot.connectionState == ConnectionState.waiting
                               ? MySplashScreen()
-                              : Welcome(),
+                              : LiquidWelcomeScreen(),
                     ),
+              LiquidAppSwitchScreen.routeName: (ctx) => LiquidAppSwitchScreen(),
               CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
               AuthScreen.routeName: (ctx) => AuthScreen(),
               ProductsOverviewScreen.routeName: (ctx) =>

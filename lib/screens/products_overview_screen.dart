@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/helpers/theme_config.dart';
@@ -92,19 +94,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         appBar: AppBar(
           title: Text('Krypton'),
           actions: <Widget>[
-            ThemeSwitcher(
-              clipper: ThemeSwitcherCircleClipper(),
-              builder: (context) => IconButton(
-                icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
-                color: isDark ? Colors.yellow : Colors.grey,
-                onPressed: () {
-                  lightData.toggleLights();
-                  ThemeSwitcher.of(context).changeTheme(
-                    theme: isDark ? dayTheme : nightTheme,
-                  );
-                },
-              ),
-            ),
             PopupMenuButton(
               icon: Icon(Icons.more_vert),
               onSelected: (FilterOptions selectedValue) {
@@ -136,6 +125,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () =>
                     Navigator.of(context).pushNamed(CartScreen.routeName),
+              ),
+            ),
+            ThemeSwitcher(
+              clipper: ThemeSwitcherCircleClipper(),
+              builder: (ctx) => IconButton(
+                icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
+                color: isDark ? Colors.yellow : Colors.grey,
+                onPressed: () {
+                  lightData.toggleLights();
+                  Timer(
+                    Duration(milliseconds: 50),
+                        () => ThemeSwitcher.of(ctx)
+                        .changeTheme(theme: isDark ? dayTheme : nightTheme),
+                  );
+                },
               ),
             ),
           ],

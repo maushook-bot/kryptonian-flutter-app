@@ -111,7 +111,7 @@ class Categories with ChangeNotifier {
       _categories.add(categoryData);
       notifyListeners();
     } catch (error) {
-      print('Add Categories-Error => ${error}');
+      //print('Add Categories-Error => ${error}');
       throw error;
     }
   }
@@ -147,7 +147,7 @@ class Categories with ChangeNotifier {
       //print(_categories);
       notifyListeners();
     } catch (error) {
-      print('Fetch Categories-ERROR => $error');
+      //print('Fetch Categories-ERROR => $error');
       throw error;
     }
 

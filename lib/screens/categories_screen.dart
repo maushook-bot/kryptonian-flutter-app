@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/helpers/theme_config.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/widgets/category_item.dart';
@@ -18,63 +21,43 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoriesData =
         Provider.of<Categories>(context, listen: false).categories;
-    final categoriesItem = Provider.of<Categories>(context).categoriesItems;
-    final lightData = Provider.of<Light>(context);
-    final isDark = lightData.themeDark;
-    //print('Categories-Item => ${categoriesItem}');
 
-    return ThemeSwitchingArea(
-      child: Scaffold(
-        drawer: MainDrawer(),
-        appBar: AppBar(
-          title: Text('Product Categories'),
-          actions: <Widget>[
-            ThemeSwitcher(
-              clipper: ThemeSwitcherCircleClipper(),
-              builder: (context) => IconButton(
-                icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
-                color: isDark ? Colors.yellow : Colors.grey,
-                onPressed: () {
-                  lightData.toggleLights();
-                  ThemeSwitcher.of(context).changeTheme(
-                    theme: isDark ? dayTheme : nightTheme,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        body: FutureBuilder(
-          future: _refreshCategories(context),
-          builder: (context, snapshot) => RefreshIndicator(
-            onRefresh: () => _refreshCategories(context),
-            child: categoriesData.length == 0
-                ? _buildEmptyContent(context)
-                : GridView(
-                    padding: EdgeInsets.all(10),
-                    children: categoriesData
-                        .map(
-                          (category) => CategoryItem(
-                            id: category.id,
-                            title: category.title,
-                            imgUrl: category.imgUrl,
-                          ),
-                        )
-                        .toList(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
+    return Scaffold(
+      drawer: MainDrawer(),
+      appBar: AppBar(
+        title: Text('Product Categories'),
+        actions: <Widget>[],
+      ),
+      body: FutureBuilder(
+        future: _refreshCategories(context),
+        builder: (context, snapshot) => RefreshIndicator(
+          onRefresh: () => _refreshCategories(context),
+          child: categoriesData.length == 0
+              ? _buildEmptyContent(context)
+              : GridView(
+                  padding: EdgeInsets.all(10),
+                  children: categoriesData
+                      .map(
+                        (category) => CategoryItem(
+                          id: category.id,
+                          title: category.title,
+                          imgUrl: category.imgUrl,
+                        ),
+                      )
+                      .toList(),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 2,
 
-                      /// height / width ratio bit taller than wide
-                      crossAxisSpacing: 5,
+                    /// height / width ratio bit taller than wide
+                    crossAxisSpacing: 5,
 
-                      /// Spacing b/w the columns
-                      mainAxisSpacing: 5,
+                    /// Spacing b/w the columns
+                    mainAxisSpacing: 5,
 
-                      /// Spacing b/w Rows
-                    ),
+                    /// Spacing b/w Rows
                   ),
-          ),
+                ),
         ),
       ),
     );
