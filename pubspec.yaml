@@ -38,6 +38,7 @@ dependencies:
   flutter_app_name: ^0.1.1
   animated_theme_switcher: ^2.0.1
   liquid_swipe: 1.5.0
+  fab_circular_menu: ^1.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

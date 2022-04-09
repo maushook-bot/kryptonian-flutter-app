@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/helpers/theme_config.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/user_products_screen.dart';
+import 'package:flutter_complete_guide/widgets/circular_menu.dart';
+import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:provider/provider.dart';
 
@@ -31,26 +34,7 @@ class _LiquidAppSwitchScreenState extends State<LiquidAppSwitchScreen> {
     final isDark = lightData.themeDark;
     return ThemeSwitchingArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: DeepBlue.kToDark,
-          elevation: 100,
-          onPressed: () => {},
-          child: ThemeSwitcher(
-            clipper: ThemeSwitcherBoxClipper(),
-            builder: (ctx) => IconButton(
-              icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
-              color: isDark ? Colors.yellow : Colors.white,
-              onPressed: () {
-                lightData.toggleLights();
-                Timer(
-                  Duration(milliseconds: 50),
-                  () => ThemeSwitcher.of(ctx)
-                      .changeTheme(theme: isDark ? dayTheme : nightTheme),
-                );
-              },
-            ),
-          ),
-        ),
+        floatingActionButton: CircularMenu(),
         body: LiquidSwipe(
           pages: forwardPages,
           enableLoop: true,
