@@ -136,7 +136,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                   lightData.toggleLights();
                   Timer(
                     Duration(milliseconds: 50),
-                        () => ThemeSwitcher.of(ctx)
+                    () => ThemeSwitcher.of(ctx)
                         .changeTheme(theme: isDark ? dayTheme : nightTheme),
                   );
                 },

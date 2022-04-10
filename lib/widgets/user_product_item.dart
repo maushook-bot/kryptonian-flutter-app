@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
@@ -88,12 +89,15 @@ class _UserProductItemState extends State<UserProductItem> {
 
   void _callDeleteProductHandler(Products productsData, Cart cartData) async {
     cartData.deleteItems(widget.productId);
-    String auth = Provider.of<Auth>(context, listen: false).token;
     try {
       await productsData.deleteProduct(widget.productId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Product Deleted!'),
+          backgroundColor: DeepBlue.kToDark,
+          content: Text(
+            'Product Deleted!',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       );
     } catch (error) {
@@ -137,8 +141,31 @@ class _UserProductItemState extends State<UserProductItem> {
           SlidableAction(
             key: const ValueKey(1),
             flex: 2,
-            onPressed: (ctx) =>
-                _callDeleteProductHandler(productsData, cartData),
+            onPressed: (ctx) => showDialog(
+              context: ctx,
+              builder: (context) => AlertDialog(
+                elevation: 10.4,
+                contentPadding: EdgeInsets.all(30.0),
+                title: Text('Attention', textAlign: TextAlign.center),
+                content: Text(
+                  'Do you want to remove this item?',
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _callDeleteProductHandler(productsData, cartData);
+                      Navigator.of(context).pop(true);
+                    },
+                    child: Text('Yes'),
+                  ),
+                ],
+              ),
+            ),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -149,21 +176,21 @@ class _UserProductItemState extends State<UserProductItem> {
       child: Card(
         margin: EdgeInsets.symmetric(vertical: 4, horizontal: 15),
         child: ListTile(
-          title: Text(widget.title),
-          leading: _isImgErr == false
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(widget.imageUrl),
-                  onBackgroundImageError: (error, _) {
-                    setState(() {
-                      _isImgErr = true;
-                    });
-                  },
-                )
-              : CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/placeholder.png'),
-                ),
-          trailing: Icon(Icons.double_arrow_sharp)
-        ),
+            title: Text(widget.title),
+            leading: _isImgErr == false
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(widget.imageUrl),
+                    onBackgroundImageError: (error, _) {
+                      setState(() {
+                        _isImgErr = true;
+                      });
+                    },
+                  )
+                : CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/images/placeholder.png'),
+                  ),
+            trailing: Icon(Icons.double_arrow_sharp)),
       ),
     );
   }

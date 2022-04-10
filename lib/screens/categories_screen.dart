@@ -1,17 +1,45 @@
 import 'dart:async';
-
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/helpers/theme_config.dart';
-import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
+import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/widgets/category_item.dart';
 import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   static const routeName = '/categories';
+
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    if (_isInit == true) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await Provider.of<Users>(context).fetchUsers();
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    _isInit = false;
+    setState(() {
+      _isLoading = false;
+    });
+    super.didChangeDependencies();
+  }
 
   Future<void> _refreshCategories(BuildContext context) async {
     await Provider.of<Categories>(context).fetchCategories();

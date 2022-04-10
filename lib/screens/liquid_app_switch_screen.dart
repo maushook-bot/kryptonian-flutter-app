@@ -1,19 +1,13 @@
-import 'dart:async';
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/helpers/theme_config.dart';
-import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
-import 'package:flutter_complete_guide/screens/user_products_screen.dart';
 import 'package:flutter_complete_guide/widgets/circular_menu.dart';
-import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:provider/provider.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 class LiquidAppSwitchScreen extends StatefulWidget {
   static const routeName = '/liquid-app-switch';
@@ -43,7 +37,7 @@ class _LiquidAppSwitchScreenState extends State<LiquidAppSwitchScreen> {
           waveType: WaveType.liquidReveal,
           positionSlideIcon: 0.5,
           slideIconWidget: Icon(
-            Icons.keyboard_arrow_left,
+            EvaIcons.chevronLeft,
             color: isDark ? Colors.deepOrange : Colors.red,
             size: 40,
           ),

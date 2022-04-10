@@ -7,8 +7,8 @@ import 'package:flutter_complete_guide/helpers/theme_config.dart';
 import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
+import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
-import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
@@ -26,6 +26,8 @@ class CircularMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final lightData = Provider.of<Light>(context, listen: false);
     final isDark = lightData.themeDark;
+    final bool isSeller =
+        Provider.of<Users>(context, listen: false).fetchIsSeller;
     return Builder(
       builder: (context) => FabCircularMenu(
         key: fabKey,
@@ -36,9 +38,17 @@ class CircularMenu extends StatelessWidget {
         fabSize: 64.0,
         fabElevation: 32.0,
         fabIconBorder: CircleBorder(),
-        fabColor: Colors.deepOrangeAccent,
-        fabOpenIcon: Icon(Icons.menu, color: DeepBlue.kToDark),
-        fabCloseIcon: Icon(Icons.close, color: DeepBlue.kToDark),
+        fabColor: isDark ? Colors.deepOrangeAccent : DeepBlue.kToDark,
+        fabOpenIcon: Icon(
+          Icons.menu,
+          color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
+          size: 30,
+        ),
+        fabCloseIcon: Icon(
+          Icons.close,
+          color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
+          size: 30,
+        ),
         fabMargin: const EdgeInsets.all(16.0),
         animationDuration: const Duration(milliseconds: 800),
         animationCurve: Curves.easeInOutCirc,
@@ -55,7 +65,7 @@ class CircularMenu extends StatelessWidget {
                 lightData.toggleLights();
                 Timer(
                   Duration(milliseconds: 50),
-                      () => ThemeSwitcher.of(ctx)
+                  () => ThemeSwitcher.of(ctx)
                       .changeTheme(theme: isDark ? dayTheme : nightTheme),
                 );
               },
@@ -64,16 +74,22 @@ class CircularMenu extends StatelessWidget {
           IconButton(
             onPressed: () => _tapHandler(
                 context, ProductsOverviewScreen.routeName, ['', false]),
-            icon: Icon(Icons.shop, color: Colors.deepOrange, size: 30),
+            icon: Icon(Icons.shop,
+                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                size: 30),
           ),
           IconButton(
             onPressed: () =>
                 _tapHandler(context, LiquidAppSwitchScreen.routeName, null),
-            icon: Icon(Icons.category, color: Colors.deepOrange, size: 30),
+            icon: Icon(Icons.category,
+                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                size: 30),
           ),
           IconButton(
             onPressed: () => _tapHandler(context, OrdersScreen.routeName, null),
-            icon: Icon(Icons.credit_card, color: Colors.deepOrange, size: 30),
+            icon: Icon(Icons.credit_card,
+                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                size: 30),
           ),
           IconButton(
             onPressed: () {
@@ -81,23 +97,27 @@ class CircularMenu extends StatelessWidget {
             },
             icon: Icon(
               Icons.add_shopping_cart_sharp,
-              color: Colors.deepOrange,
+              color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
               size: 30,
             ),
           ),
-          IconButton(
-            onPressed: () =>
-                _tapHandler(context, UserProductsScreen.routeName, null),
-            icon:
-                Icon(Icons.manage_accounts, color: Colors.deepOrange, size: 30),
-          ),
+          if (isSeller == true && isSeller != null)
+            IconButton(
+              onPressed: () =>
+                  _tapHandler(context, UserProductsScreen.routeName, null),
+              icon: Icon(Icons.manage_accounts,
+                  color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                  size: 30),
+            ),
           IconButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('/');
               Provider.of<Auth>(context, listen: false).logout();
             },
-            icon: Icon(Icons.exit_to_app, color: Colors.deepOrange, size: 30),
+            icon: Icon(Icons.exit_to_app,
+                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                size: 30),
           ),
         ],
       ),

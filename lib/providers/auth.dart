@@ -36,7 +36,6 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
-
     final String API_KEY = dotenv.env['API_KEY'];
     final url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:${urlSegment}?key=$API_KEY');
@@ -143,4 +142,5 @@ class Auth with ChangeNotifier {
     _autoLogout();
     return true;
   }
+
 }

@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.7 @@@
-/// @@@ App Features: KB-Liquid Swipe and Bug Fixes ✨
+/// @@@ version: 4.8 @@@
+/// @@@ App Features: KB-92 Access control products ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -14,6 +14,7 @@ import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
+import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/categories_screen.dart';
@@ -55,6 +56,14 @@ class MyApp extends StatelessWidget {
             auth.token,
             auth.userId,
             previousProducts == null ? [] : previousProducts.item,
+          ),
+        ),
+        ChangeNotifierProxyProvider<Auth, Users>(
+          create: (ctx) => Users('', '', []),
+          update: (ctx, auth, previousUsers) => Users(
+            auth.token,
+            auth.userId,
+            previousUsers == null ? [] : previousUsers.usersList,
           ),
         ),
         ChangeNotifierProxyProvider<Auth, Categories>(

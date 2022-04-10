@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
-import 'package:flutter_complete_guide/screens/categories_screen.dart';
+import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/perspective_zoom_screen.dart';
-import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -58,7 +57,7 @@ class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
   AuthMode _authMode = AuthMode.Login;
-  Map<String, String> _authData = {
+  Map<String, dynamic> _authData = {
     'email': '',
     'password': '',
   };
@@ -75,6 +74,12 @@ class _AuthCardState extends State<AuthCard>
   AnimationController _animationController;
   Animation<Size> _heightAnimation;
   Animation<double> _opacityAnimation;
+
+  /// Obscure Password:-
+  bool _passwordObscure = true;
+
+  /// Seller Info:
+  bool _isSeller = false;
 
   @override
   void initState() {
@@ -191,16 +196,27 @@ class _AuthCardState extends State<AuthCard>
         await Provider.of<Auth>(context, listen: false)
             .login(
                 _authData['email'], _authData['password'], 'signInWithPassword')
-            .then((_) => Navigator.of(context)
-                .popAndPushNamed(LiquidAppSwitchScreen.routeName));
-        //arguments: ['', false]));
+            .then(
+          (_) {
+            //Provider.of<Users>(context, listen: false).fetchUser();
+            Navigator.of(context)
+                .popAndPushNamed(LiquidAppSwitchScreen.routeName);
+            Provider.of<Users>(context, listen: false).fetchUsers();
+          },
+        );
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password'], 'signUp')
-            .then((_) => Navigator.of(context)
-                .pushNamed(LiquidAppSwitchScreen.routeName));
-        //arguments: ['', false]));
+            .then(
+          (_) {
+            ///Add Seller Info:-
+            Provider.of<Users>(context, listen: false)
+                .addUser(_authData['email'], _isSeller);
+            Navigator.of(context).pushNamed(LiquidAppSwitchScreen.routeName);
+            Provider.of<Users>(context, listen: false).fetchUsers();
+          },
+        );
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';
@@ -342,6 +358,19 @@ class _AuthCardState extends State<AuthCard>
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
                       icon: Icon(Icons.lock_outlined, color: Colors.cyan),
+                      suffixIcon: IconButton(
+                        onPressed: () => {
+                          setState(() {
+                            _passwordObscure = !_passwordObscure;
+                          }),
+                        },
+                        icon: Icon(
+                          _passwordObscure
+                              ? Icons.remove_red_eye_outlined
+                              : Icons.remove_red_eye,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
                       labelStyle: TextStyle(color: Colors.white30),
                       helperStyle: TextStyle(color: Colors.white30),
                       hintStyle: TextStyle(
@@ -352,7 +381,7 @@ class _AuthCardState extends State<AuthCard>
                       ),
                     ),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: true,
+                    obscureText: _passwordObscure,
                     onChanged: (value) => _checkPassword(value),
                     onSaved: (value) => _authData['password'] = value,
                   ),
@@ -369,6 +398,19 @@ class _AuthCardState extends State<AuthCard>
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Confirm Password',
+                          suffixIcon: IconButton(
+                            onPressed: () => {
+                              setState(() {
+                                _passwordObscure = !_passwordObscure;
+                              }),
+                            },
+                            icon: Icon(
+                              _passwordObscure
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.remove_red_eye,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
                           icon: Icon(Icons.lock_outlined, color: Colors.cyan),
                           labelStyle: TextStyle(color: Colors.white30),
                           hintStyle: TextStyle(
@@ -379,7 +421,7 @@ class _AuthCardState extends State<AuthCard>
                           ),
                         ),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        obscureText: true,
+                        obscureText: _passwordObscure,
                         validator: _authMode == AuthMode.SignUp
                             ? (value) {
                                 if (value != _passwordController.text) {
@@ -427,6 +469,36 @@ class _AuthCardState extends State<AuthCard>
                       ? _buildPasswordHelper(context, deviceSize)
                       : Text(''),
                   SizedBox(height: 14),
+                  _authMode == AuthMode.SignUp
+                      ? Center(
+                          child: Container(
+                            width: deviceSize.width,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSeller = !_isSeller;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isSeller
+                                        ? Icons.check_box_rounded
+                                        : Icons.check_box_outline_blank,
+                                    color: _isSeller
+                                        ? Colors.greenAccent
+                                        : Colors.deepOrangeAccent,
+                                  ),
+                                ),
+                                Text(
+                                  'Are you a seller ?',
+                                  style: TextStyle(color: Colors.white60),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : Text(''),
                   _isLoading == true
                       ? CircularProgressIndicator()
                       : Container(

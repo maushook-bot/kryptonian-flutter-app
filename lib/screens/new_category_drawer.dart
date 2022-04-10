@@ -36,7 +36,8 @@ class _NewCategoryDrawerState extends State<NewCategoryDrawer> {
         backgroundColor: Colors.black,
         content: Text(
           'Product Category Added Successfully 🏁',
-          style: TextStyle(color: Colors.deepOrange),
+          style:
+              TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),
         ),
       ),
     );
