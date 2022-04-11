@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
@@ -19,6 +20,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _isLoading = false;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _isInit = false;
+    _isLoading = false;
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if (_isInit == true) {
@@ -28,6 +37,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
       try {
         await Provider.of<Users>(context).fetchUsers();
+        await Provider.of<Categories>(context).fetchCategories();
       } catch (error) {
         setState(() {
           _isLoading = false;
@@ -49,45 +59,48 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     final categoriesData =
         Provider.of<Categories>(context, listen: false).categories;
-
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
         title: Text('Product Categories'),
         actions: <Widget>[],
       ),
-      body: FutureBuilder(
-        future: _refreshCategories(context),
-        builder: (context, snapshot) => RefreshIndicator(
-          onRefresh: () => _refreshCategories(context),
-          child: categoriesData.length == 0
-              ? _buildEmptyContent(context)
-              : GridView(
-                  padding: EdgeInsets.all(10),
-                  children: categoriesData
-                      .map(
-                        (category) => CategoryItem(
-                          id: category.id,
-                          title: category.title,
-                          imgUrl: category.imgUrl,
+      body: _isLoading == true
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : FutureBuilder(
+              future: _refreshCategories(context),
+              builder: (context, snapshot) => RefreshIndicator(
+                onRefresh: () => _refreshCategories(context),
+                child: categoriesData.length == 0
+                    ? _buildEmptyContent(context)
+                    : GridView(
+                        padding: EdgeInsets.all(10),
+                        children: categoriesData
+                            .map(
+                              (category) => CategoryItem(
+                                id: category.id,
+                                title: category.title,
+                                imgUrl: category.imgUrl,
+                              ),
+                            )
+                            .toList(),
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 3 / 2,
+
+                          /// height / width ratio bit taller than wide
+                          crossAxisSpacing: 5,
+
+                          /// Spacing b/w the columns
+                          mainAxisSpacing: 5,
+
+                          /// Spacing b/w Rows
                         ),
-                      )
-                      .toList(),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 2,
-
-                    /// height / width ratio bit taller than wide
-                    crossAxisSpacing: 5,
-
-                    /// Spacing b/w the columns
-                    mainAxisSpacing: 5,
-
-                    /// Spacing b/w Rows
-                  ),
-                ),
-        ),
-      ),
+                      ),
+              ),
+            ),
     );
   }
 

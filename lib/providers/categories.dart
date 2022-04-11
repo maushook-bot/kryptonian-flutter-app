@@ -121,6 +121,7 @@ class Categories with ChangeNotifier {
   void deleteCategory(String categoryId) {}
 
   Future<void> fetchCategories() async {
+    //print('FETCHED => CATEGORIES');
     final url = Uri.https(
         'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
         '/categories.json',

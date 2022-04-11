@@ -26,100 +26,100 @@ class CircularMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final lightData = Provider.of<Light>(context, listen: false);
     final isDark = lightData.themeDark;
-    final bool isSeller =
-        Provider.of<Users>(context, listen: false).fetchIsSeller;
     return Builder(
-      builder: (context) => FabCircularMenu(
-        key: fabKey,
-        alignment: Alignment.bottomRight,
-        ringColor: Colors.black.withAlpha(180),
-        ringDiameter: 500.0,
-        ringWidth: 160.0,
-        fabSize: 64.0,
-        fabElevation: 32.0,
-        fabIconBorder: CircleBorder(),
-        fabColor: isDark ? Colors.deepOrangeAccent : DeepBlue.kToDark,
-        fabOpenIcon: Icon(
-          Icons.menu,
-          color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
-          size: 30,
-        ),
-        fabCloseIcon: Icon(
-          Icons.close,
-          color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
-          size: 30,
-        ),
-        fabMargin: const EdgeInsets.all(16.0),
-        animationDuration: const Duration(milliseconds: 800),
-        animationCurve: Curves.easeInOutCirc,
-        onDisplayChange: (isOpen) {
-          //_showSnackBar(context, "The menu is ${isOpen ? "open" : "closed"}");
-        },
-        children: <Widget>[
-          ThemeSwitcher(
-            clipper: ThemeSwitcherBoxClipper(),
-            builder: (ctx) => IconButton(
-              icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
-              color: isDark ? Colors.yellow : Colors.white,
-              onPressed: () {
-                lightData.toggleLights();
-                Timer(
-                  Duration(milliseconds: 50),
-                  () => ThemeSwitcher.of(ctx)
-                      .changeTheme(theme: isDark ? dayTheme : nightTheme),
-                );
-              },
+      builder: (context) => Consumer<Users>(
+        builder: (ctx, userData, _) => FabCircularMenu(
+          key: fabKey,
+          alignment: Alignment.bottomRight,
+          ringColor: Colors.black.withAlpha(180),
+          ringDiameter: 500.0,
+          ringWidth: 160.0,
+          fabSize: 64.0,
+          fabElevation: 32.0,
+          fabIconBorder: CircleBorder(),
+          fabColor: isDark ? Colors.deepOrangeAccent : DeepBlue.kToDark,
+          fabOpenIcon: Icon(
+            Icons.menu,
+            color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
+            size: 30,
+          ),
+          fabCloseIcon: Icon(
+            Icons.close,
+            color: isDark ? DeepBlue.kToDark : Colors.deepOrangeAccent,
+            size: 30,
+          ),
+          fabMargin: const EdgeInsets.all(16.0),
+          animationDuration: const Duration(milliseconds: 800),
+          animationCurve: Curves.easeInOutCirc,
+          onDisplayChange: (isOpen) {
+            //_showSnackBar(context, "The menu is ${isOpen ? "open" : "closed"}");
+          },
+          children: <Widget>[
+            ThemeSwitcher(
+              clipper: ThemeSwitcherBoxClipper(),
+              builder: (ctx) => IconButton(
+                icon: Icon(isDark ? Icons.wb_sunny : Icons.nights_stay_sharp),
+                color: isDark ? Colors.yellow : Colors.white,
+                onPressed: () {
+                  lightData.toggleLights();
+                  Timer(
+                    Duration(milliseconds: 50),
+                    () => ThemeSwitcher.of(ctx)
+                        .changeTheme(theme: isDark ? dayTheme : nightTheme),
+                  );
+                },
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: () => _tapHandler(
-                context, ProductsOverviewScreen.routeName, ['', false]),
-            icon: Icon(Icons.shop,
-                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
-                size: 30),
-          ),
-          IconButton(
-            onPressed: () =>
-                _tapHandler(context, LiquidAppSwitchScreen.routeName, null),
-            icon: Icon(Icons.category,
-                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
-                size: 30),
-          ),
-          IconButton(
-            onPressed: () => _tapHandler(context, OrdersScreen.routeName, null),
-            icon: Icon(Icons.credit_card,
-                color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
-                size: 30),
-          ),
-          IconButton(
-            onPressed: () {
-              _tapHandler(context, CartScreen.routeName, null);
-            },
-            icon: Icon(
-              Icons.add_shopping_cart_sharp,
-              color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
-              size: 30,
-            ),
-          ),
-          if (isSeller == true && isSeller != null)
             IconButton(
-              onPressed: () =>
-                  _tapHandler(context, UserProductsScreen.routeName, null),
-              icon: Icon(Icons.manage_accounts,
+              onPressed: () => _tapHandler(
+                  ctx, ProductsOverviewScreen.routeName, ['', false]),
+              icon: Icon(Icons.shop,
                   color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
                   size: 30),
             ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed('/');
-              Provider.of<Auth>(context, listen: false).logout();
-            },
-            icon: Icon(Icons.exit_to_app,
+            IconButton(
+              onPressed: () =>
+                  _tapHandler(ctx, LiquidAppSwitchScreen.routeName, null),
+              icon: Icon(Icons.category,
+                  color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                  size: 30),
+            ),
+            IconButton(
+              onPressed: () => _tapHandler(ctx, OrdersScreen.routeName, null),
+              icon: Icon(Icons.credit_card,
+                  color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                  size: 30),
+            ),
+            IconButton(
+              onPressed: () {
+                _tapHandler(ctx, CartScreen.routeName, null);
+              },
+              icon: Icon(
+                Icons.add_shopping_cart_sharp,
                 color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
-                size: 30),
-          ),
-        ],
+                size: 30,
+              ),
+            ),
+            if (userData.fetchIsSeller == true && userData.fetchIsSeller != null)
+              IconButton(
+                onPressed: () =>
+                    _tapHandler(ctx, UserProductsScreen.routeName, null),
+                icon: Icon(Icons.manage_accounts,
+                    color: isDark ? Colors.teal : Colors.red,
+                    size: 30),
+              ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                Navigator.of(ctx).pushNamed('/');
+                Provider.of<Auth>(ctx, listen: false).logout();
+              },
+              icon: Icon(Icons.exit_to_app,
+                  color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
+                  size: 30),
+            ),
+          ],
+        ),
       ),
     );
   }

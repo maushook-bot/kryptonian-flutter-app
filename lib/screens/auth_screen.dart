@@ -113,8 +113,9 @@ class _AuthCardState extends State<AuthCard>
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _animationController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   void _checkPassword(String value) {
@@ -198,25 +199,15 @@ class _AuthCardState extends State<AuthCard>
                 _authData['email'], _authData['password'], 'signInWithPassword')
             .then(
           (_) {
-            //Provider.of<Users>(context, listen: false).fetchUser();
             Navigator.of(context)
                 .popAndPushNamed(LiquidAppSwitchScreen.routeName);
-            Provider.of<Users>(context, listen: false).fetchUsers();
           },
         );
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
-            .signup(_authData['email'], _authData['password'], 'signUp')
-            .then(
-          (_) {
-            ///Add Seller Info:-
-            Provider.of<Users>(context, listen: false)
-                .addUser(_authData['email'], _isSeller);
-            Navigator.of(context).pushNamed(LiquidAppSwitchScreen.routeName);
-            Provider.of<Users>(context, listen: false).fetchUsers();
-          },
-        );
+            .signup(_authData['email'], _authData['password'], 'signUp');
+        Navigator.of(context).pushNamed(LiquidAppSwitchScreen.routeName, arguments: [_authData['email'], _isSeller]);
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';

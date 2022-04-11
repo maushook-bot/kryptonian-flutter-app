@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
 /// @@@ version: 4.8 @@@
-/// @@@ App Features: KB-92 Access control products ✨
+/// @@@ App Features: KB-92 Access control products | Get UserName✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -50,20 +50,20 @@ class MyApp extends StatelessWidget {
         /// provided values using Provider.of<Products>(content)
         /// OR Using Consumer<Products>()
         ChangeNotifierProvider(create: (ctx) => Auth()),
+        ChangeNotifierProxyProvider<Auth, Users>(
+          create: (ctx) => Users('', '', []),
+          update: (ctx, auth, previousUsers) => Users(
+            auth.token,
+            auth.userId,
+            previousUsers == null ? []: previousUsers.usersList,
+          ),
+        ),
         ChangeNotifierProxyProvider<Auth, Products>(
           create: (ctx) => Products('', '', []),
           update: (ctx, auth, previousProducts) => Products(
             auth.token,
             auth.userId,
             previousProducts == null ? [] : previousProducts.item,
-          ),
-        ),
-        ChangeNotifierProxyProvider<Auth, Users>(
-          create: (ctx) => Users('', '', []),
-          update: (ctx, auth, previousUsers) => Users(
-            auth.token,
-            auth.userId,
-            previousUsers == null ? [] : previousUsers.usersList,
           ),
         ),
         ChangeNotifierProxyProvider<Auth, Categories>(

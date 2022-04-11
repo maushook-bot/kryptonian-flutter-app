@@ -142,5 +142,4 @@ class Auth with ChangeNotifier {
     _autoLogout();
     return true;
   }
-
 }
