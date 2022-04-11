@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
 /// @@@ version: 4.8 @@@
-/// @@@ App Features: KB-92 Access control products | Get UserName✨
+/// @@@ App Features: KB-100: Close Nav bar auto ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

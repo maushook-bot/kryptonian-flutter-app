@@ -71,21 +71,28 @@ class CircularMenu extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () => _tapHandler(
-                  ctx, ProductsOverviewScreen.routeName, ['', false]),
+              onPressed: () {
+                _tapHandler(ctx, ProductsOverviewScreen.routeName, ['', false]);
+                fabKey.currentState.close();
+              },
               icon: Icon(Icons.shop,
                   color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
                   size: 30),
             ),
             IconButton(
-              onPressed: () =>
-                  _tapHandler(ctx, LiquidAppSwitchScreen.routeName, null),
+              onPressed: () {
+                _tapHandler(ctx, LiquidAppSwitchScreen.routeName, null);
+                fabKey.currentState.close();
+              },
               icon: Icon(Icons.category,
                   color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
                   size: 30),
             ),
             IconButton(
-              onPressed: () => _tapHandler(ctx, OrdersScreen.routeName, null),
+              onPressed: () {
+                _tapHandler(ctx, OrdersScreen.routeName, null);
+                fabKey.currentState.close();
+              },
               icon: Icon(Icons.credit_card,
                   color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
                   size: 30),
@@ -93,6 +100,7 @@ class CircularMenu extends StatelessWidget {
             IconButton(
               onPressed: () {
                 _tapHandler(ctx, CartScreen.routeName, null);
+                fabKey.currentState.close();
               },
               icon: Icon(
                 Icons.add_shopping_cart_sharp,
@@ -100,19 +108,22 @@ class CircularMenu extends StatelessWidget {
                 size: 30,
               ),
             ),
-            if (userData.fetchIsSeller == true && userData.fetchIsSeller != null)
+            if (userData.fetchIsSeller == true &&
+                userData.fetchIsSeller != null)
               IconButton(
-                onPressed: () =>
-                    _tapHandler(ctx, UserProductsScreen.routeName, null),
+                onPressed: () {
+                  _tapHandler(ctx, UserProductsScreen.routeName, null);
+                  fabKey.currentState.close();
+                },
                 icon: Icon(Icons.manage_accounts,
-                    color: isDark ? Colors.teal : Colors.red,
-                    size: 30),
+                    color: isDark ? Colors.teal : Colors.red, size: 30),
               ),
             IconButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
                 Navigator.of(ctx).pushNamed('/');
                 Provider.of<Auth>(ctx, listen: false).logout();
+                fabKey.currentState.close();
               },
               icon: Icon(Icons.exit_to_app,
                   color: isDark ? Colors.deepOrange : Colors.lightBlueAccent,
