@@ -1,12 +1,13 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 4.8 @@@
-/// @@@ App Features: KB-100: Close Nav bar auto ✨
+/// @@@ version: 5.0-stable @@@
+/// @@@ App Features: Improved stability-API-calls-monitor ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
@@ -40,9 +41,9 @@ Future main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isPlatformDark =
-        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
-    final initTheme = isPlatformDark ? nightTheme : dayTheme;
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    final initTheme = brightness == Brightness.dark ? nightTheme : dayTheme;
+
     return MultiProvider(
       providers: [
         /// ChangeNotifierProvider Builder with Initialised Objects Products
@@ -86,7 +87,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, authData, _) => ThemeProvider(
-          initTheme: initTheme,
+          initTheme: dayTheme,
           builder: (_, myTheme) => MaterialApp(
             title: 'Krypton',
             theme: myTheme,

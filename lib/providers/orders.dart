@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class OrderItem {
@@ -69,8 +70,9 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAllOrders() async {
     // TODO:
+    final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
         '/orders.json',
         {'auth': auth});
 
@@ -118,8 +120,9 @@ class Orders with ChangeNotifier {
       List<CartItem> cartProducts, double total) async {
     // TODO:
     final timeStamp = DateTime.now();
+    final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
         '/orders.json',
         {'auth': auth});
 

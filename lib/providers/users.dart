@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class User {
@@ -68,9 +69,10 @@ class Users with ChangeNotifier {
   Future<void> addUser(String email, bool isSeller) async {
     print('ADD => User | $email | isSeller: $isSeller | uid: $uid | auth');
     String newSellerId;
+    final String DOMAIN = dotenv.env['DOMAIN'];
     try {
       final url = Uri.https(
-          'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+          '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
           '/users.json',
           {'auth': auth});
       if (email != '') {
@@ -107,8 +109,9 @@ class Users with ChangeNotifier {
 
   Future<void> fetchUsers() async {
     //print('FETCHED => All Users');
+    final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
         '/users.json',
         {'auth': auth});
 

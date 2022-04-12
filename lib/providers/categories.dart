@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/category.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class CategoriesItem {
@@ -83,8 +84,9 @@ class Categories with ChangeNotifier {
 
   Future<void> addCategory(Category newCategory) async {
     String newCategoryId;
+    final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
         '/categories.json',
         {'auth': auth});
 
@@ -122,8 +124,9 @@ class Categories with ChangeNotifier {
 
   Future<void> fetchCategories() async {
     //print('FETCHED => CATEGORIES');
+    final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        'kryptonian-flutter-app-default-rtdb.europe-west1.firebasedatabase.app',
+        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
         '/categories.json',
         {'auth': auth});
 

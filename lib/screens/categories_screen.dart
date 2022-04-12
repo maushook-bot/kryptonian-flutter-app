@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
@@ -37,7 +36,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
       try {
         await Provider.of<Users>(context).fetchUsers();
-        await Provider.of<Categories>(context).fetchCategories();
+        //await Provider.of<Categories>(context).fetchCategories();
       } catch (error) {
         setState(() {
           _isLoading = false;
