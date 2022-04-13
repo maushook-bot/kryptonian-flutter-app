@@ -172,6 +172,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD => EDIT PRODUCTS SCREEN');
     final productsData = Provider.of<Products>(context, listen: true);
     final cartData = Provider.of<Cart>(context, listen: true);
     final catData = Provider.of<Categories>(context, listen: false);

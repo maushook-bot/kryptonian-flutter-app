@@ -9,6 +9,7 @@ import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
@@ -81,7 +82,7 @@ class CircularMenu extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                _tapHandler(ctx, LiquidAppSwitchScreen.routeName, null);
+                _tapHandler(ctx, CategoriesScreen.routeName, null);
                 fabKey.currentState.close();
               },
               icon: Icon(Icons.category,

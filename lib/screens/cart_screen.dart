@@ -14,6 +14,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD => CART SCREEN');
     final cartData = Provider.of<Cart>(context);
     final ordersData = Provider.of<Orders>(context);
     final deviceSize = MediaQuery.of(context).size;

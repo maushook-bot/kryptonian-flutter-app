@@ -63,7 +63,7 @@ class Products with ChangeNotifier {
 
   /// Firebase CRED Methods:-
   Future<void> fetchProduct([bool filterByUser = false]) async {
-    print('FETCH => PRODUCTS, $uid');
+    //print('FETCH => PRODUCTS, $uid');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
       '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
@@ -135,7 +135,7 @@ class Products with ChangeNotifier {
       newProductId = json.decode(response.body)['name'];
 
       /// ADD NEW PRODUCT
-      print('ADD => Product');
+      //print('ADD => Product');
       final product = Product(
         id: newProductId,
         title: newProduct.title,
@@ -172,7 +172,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String productId) async {
-    print('DELETE => Product: ${productId}');
+    //print('DELETE => Product: ${productId}');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final existingProdIndex = _items.indexWhere((item) => item.id == productId);
     Product existingProduct = _items[existingProdIndex];
@@ -184,11 +184,10 @@ class Products with ChangeNotifier {
         {'auth': auth});
 
     final response = await http.delete(url);
-    print('DELETE Response => ${response.statusCode}');
+    //print('DELETE Response => ${response.statusCode}');
     if (response.statusCode == 200) {
       existingProduct = null;
     } else if (response.statusCode >= 400) {
-      //print('DELETE => Failed: ${response.body}');
       _items.insert(existingProdIndex, existingProduct);
       notifyListeners();
       throw HttpException('Delete Failed. Try Again Later!');
@@ -198,7 +197,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product updatedProduct) async {
     //TODO: Work on this!!
-    print('UPDATE => Product');
+    //print('UPDATE => Product');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final productIndex = _items.indexWhere((product) => product.id == id);
     if (productIndex >= 0) {
@@ -217,7 +216,6 @@ class Products with ChangeNotifier {
           'categoryId': updatedProduct.categoryId,
         }),
       );
-      //print(response.body);
       _items[productIndex] = updatedProduct;
       notifyListeners();
     }

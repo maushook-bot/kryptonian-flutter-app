@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 5.0-stable @@@
-/// @@@ App Features: Improved stability-API-calls-monitor ✨
+/// @@@ version: 5.1-beta-stable-optimised @@@
+/// @@@ App Features: Issue with Liquid Swipe App switch - Deprecated ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           update: (ctx, auth, previousUsers) => Users(
             auth.token,
             auth.userId,
-            previousUsers == null ? []: previousUsers.usersList,
+            previousUsers == null ? [] : previousUsers.usersList,
           ),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
@@ -86,36 +86,39 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Consumer<Auth>(
-        builder: (ctx, authData, _) => ThemeProvider(
-          initTheme: dayTheme,
-          builder: (_, myTheme) => MaterialApp(
-            title: 'Krypton',
-            theme: myTheme,
-            //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
-            routes: {
-              '/': (ctx) => authData.isAuth
-                  ? LiquidAppSwitchScreen()
-                  : FutureBuilder(
-                      future: authData.tryAutoLogin(),
-                      builder: (context, snapshot) =>
-                          snapshot.connectionState == ConnectionState.waiting
-                              ? MySplashScreen()
-                              : LiquidWelcomeScreen(),
-                    ),
-              LiquidAppSwitchScreen.routeName: (ctx) => LiquidAppSwitchScreen(),
-              CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
-              AuthScreen.routeName: (ctx) => AuthScreen(),
-              ProductsOverviewScreen.routeName: (ctx) =>
-                  ProductsOverviewScreen(),
-              ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
-              CartScreen.routeName: (ctx) => CartScreen(),
-              OrdersScreen.routeName: (ctx) => OrdersScreen(),
-              UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-              EditProductScreen.routeName: (ctx) => EditProductScreen(),
-            },
-            debugShowCheckedModeBanner: false,
-          ),
-        ),
+        builder: (ctx, authData, _) {
+          print('BUILD => MAIN');
+          return ThemeProvider(
+            initTheme: dayTheme,
+            builder: (_, myTheme) => MaterialApp(
+              title: 'Krypton',
+              theme: myTheme,
+              //home: authData.isAuth == true ? ProductsOverviewScreen() : Welcome(),
+              routes: {
+                '/': (ctx) => authData.isAuth
+                    ? CategoriesScreen()
+                    : FutureBuilder(
+                        future: authData.tryAutoLogin(),
+                        builder: (context, snapshot) =>
+                            snapshot.connectionState == ConnectionState.waiting
+                                ? MySplashScreen()
+                                : LiquidWelcomeScreen(),
+                      ),
+                //LiquidAppSwitchScreen.routeName: (ctx) => LiquidAppSwitchScreen(),
+                CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
+                AuthScreen.routeName: (ctx) => AuthScreen(),
+                ProductsOverviewScreen.routeName: (ctx) =>
+                    ProductsOverviewScreen(),
+                ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
+                CartScreen.routeName: (ctx) => CartScreen(),
+                OrdersScreen.routeName: (ctx) => OrdersScreen(),
+                UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+                EditProductScreen.routeName: (ctx) => EditProductScreen(),
+              },
+              debugShowCheckedModeBanner: false,
+            ),
+          );
+        },
       ),
     );
   }

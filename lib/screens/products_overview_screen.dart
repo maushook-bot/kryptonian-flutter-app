@@ -83,6 +83,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD => PRODUCT OVERVIEW SCREEN');
     final lightData = Provider.of<Light>(context);
     final isDark = lightData.themeDark;
     final List data = ModalRoute.of(context).settings.arguments;

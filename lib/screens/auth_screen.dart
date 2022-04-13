@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/perspective_zoom_screen.dart';
 import 'package:provider/provider.dart';
@@ -200,14 +201,14 @@ class _AuthCardState extends State<AuthCard>
             .then(
           (_) {
             Navigator.of(context)
-                .popAndPushNamed(LiquidAppSwitchScreen.routeName);
+                .popAndPushNamed(CategoriesScreen.routeName);
           },
         );
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password'], 'signUp');
-        Navigator.of(context).pushNamed(LiquidAppSwitchScreen.routeName, arguments: [_authData['email'], _isSeller]);
+        Navigator.of(context).pushNamed(CategoriesScreen.routeName, arguments: [_authData['email'], _isSeller]);
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';
@@ -249,6 +250,7 @@ class _AuthCardState extends State<AuthCard>
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD => AUTH SCREEN');
     final deviceSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Card(

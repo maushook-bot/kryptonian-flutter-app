@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/categories.dart';
 import 'package:flutter_complete_guide/providers/light.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/widgets/category_item.dart';
+import 'package:flutter_complete_guide/widgets/circular_menu.dart';
 import 'package:flutter_complete_guide/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -27,17 +30,44 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    print('INIT_STATE => CATEGORIES-SCREEN');
+
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        String auth = Provider.of<Auth>(context, listen: false).token;
+        String uid = Provider.of<Auth>(context, listen: false).userId;
+        final List args = ModalRoute.of(context).settings.arguments ?? [];
+        String _email = args.length != 0 ? args[0] : '';
+        bool _isSeller = args.length != 0 ? args[1] : false;
+        print('EMAIL | Seller | uid => $_email | $_isSeller | $uid');
+
+        /// 1.ADD USERS: IF NOT ADDED ALREADY:-
+        Provider.of<Users>(context, listen: false).addUser(_email, _isSeller);
+      },
+    );
+  }
+
+  @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if (_isInit == true) {
+      print('IS_INIT => CATEGORIES-SCREEN');
       setState(() {
         _isLoading = true;
       });
 
+      /// FETCH ALL CATEGORIES:-
+
+      /// 1.FETCH ALL USERS:-
       try {
-        await Provider.of<Users>(context).fetchUsers();
-        //await Provider.of<Categories>(context).fetchCategories();
+        Provider.of<Users>(context).fetchUsers().then((_) =>
+            Provider.of<Categories>(context, listen: false).fetchCategories());
       } catch (error) {
+        Provider.of<Categories>(context, listen: false).fetchCategories();
         setState(() {
           _isLoading = false;
         });
@@ -56,10 +86,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesData =
-        Provider.of<Categories>(context, listen: false).categories;
+    print('BUILD => CATEGORIES SCREEN');
+    //final categoriesData = Provider.of<Categories>(context, listen: false).categories;
     return Scaffold(
       drawer: MainDrawer(),
+      floatingActionButton: CircularMenu(),
       appBar: AppBar(
         title: Text('Product Categories'),
         actions: <Widget>[],
@@ -68,36 +99,37 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : FutureBuilder(
-              future: _refreshCategories(context),
-              builder: (context, snapshot) => RefreshIndicator(
-                onRefresh: () => _refreshCategories(context),
-                child: categoriesData.length == 0
-                    ? _buildEmptyContent(context)
-                    : GridView(
-                        padding: EdgeInsets.all(10),
-                        children: categoriesData
-                            .map(
-                              (category) => CategoryItem(
-                                id: category.id,
-                                title: category.title,
-                                imgUrl: category.imgUrl,
-                              ),
-                            )
-                            .toList(),
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 3 / 2,
+          : RefreshIndicator(
+              onRefresh: () => _refreshCategories(context),
+              child: Consumer<Categories>(
+                builder: (context, categoriesData, _) =>
+                    categoriesData.categories.length == 0
+                        ? _buildEmptyContent(context)
+                        : GridView(
+                            padding: EdgeInsets.all(10),
+                            children: categoriesData.categories
+                                .map(
+                                  (category) => CategoryItem(
+                                    id: category.id,
+                                    title: category.title,
+                                    imgUrl: category.imgUrl,
+                                  ),
+                                )
+                                .toList(),
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 3 / 2,
 
-                          /// height / width ratio bit taller than wide
-                          crossAxisSpacing: 5,
+                              /// height / width ratio bit taller than wide
+                              crossAxisSpacing: 5,
 
-                          /// Spacing b/w the columns
-                          mainAxisSpacing: 5,
+                              /// Spacing b/w the columns
+                              mainAxisSpacing: 5,
 
-                          /// Spacing b/w Rows
-                        ),
-                      ),
+                              /// Spacing b/w Rows
+                            ),
+                          ),
               ),
             ),
     );

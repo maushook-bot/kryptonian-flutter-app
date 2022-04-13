@@ -4,6 +4,7 @@ import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
+import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/screens/products_overview_screen.dart';
@@ -62,7 +63,7 @@ class MainDrawer extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontFamily: 'Anton-Regular'),
               ),
               onTap: () =>
-                  _tapHandler(context, LiquidAppSwitchScreen.routeName, null),
+                  _tapHandler(context, CategoriesScreen.routeName, null),
             ),
             Divider(),
             ListTile(

@@ -108,12 +108,15 @@ class Users with ChangeNotifier {
   }
 
   Future<void> fetchUsers() async {
-    //print('FETCHED => All Users');
+    print('FETCHED => All Users');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
-        '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
-        '/users.json',
-        {'auth': auth});
+      '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
+      '/users.json',
+      {
+        'auth': auth,
+      },
+    );
 
     try {
       final response = await http.get(url);
@@ -138,7 +141,7 @@ class Users with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('FETCH: USERS-ERROR => $error');
-      throw error;
+      //throw error;
     }
   }
 }

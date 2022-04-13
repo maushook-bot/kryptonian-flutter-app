@@ -104,7 +104,7 @@ class Categories with ChangeNotifier {
       newCategoryId = json.decode(response.body)['name'];
 
       /// ADD NEW Category:-
-      print('ADD => Category');
+      //print('ADD => Category');
       final categoryData = Category(
         id: newCategoryId,
         title: newCategory.title,
@@ -123,7 +123,7 @@ class Categories with ChangeNotifier {
   void deleteCategory(String categoryId) {}
 
   Future<void> fetchCategories() async {
-    //print('FETCHED => CATEGORIES');
+    print('FETCHED => CATEGORIES');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
         '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
