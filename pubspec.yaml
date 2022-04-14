@@ -91,6 +91,8 @@ flutter:
     - assets/images/asteroid-belt-1-rotated.png
     - assets/images/product-placeholder.png
     - assets/images/Black-Hole.png
+    - assets/images/google-logo.png
+    - assets/images/red-mail-logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

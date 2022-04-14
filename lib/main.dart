@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 5.1-beta-stable-optimised @@@
-/// @@@ App Features: Issue with Liquid Swipe App switch - Deprecated ✨
+/// @@@ version: 5.2-beta-stable-optimised @@@
+/// @@@ App Features: Google Sign-in ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

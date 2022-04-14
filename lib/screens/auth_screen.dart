@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_complete_guide/providers/auth.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_complete_guide/providers/users.dart';
 import 'package:flutter_complete_guide/screens/categories_screen.dart';
 import 'package:flutter_complete_guide/screens/liquid_app_switch_screen.dart';
 import 'package:flutter_complete_guide/screens/perspective_zoom_screen.dart';
+import 'package:flutter_complete_guide/widgets/sign_in_button.dart';
+import 'package:flutter_complete_guide/widgets/social_sign_in_button.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -81,6 +84,10 @@ class _AuthCardState extends State<AuthCard>
 
   /// Seller Info:
   bool _isSeller = false;
+
+  /// Control Button views:-
+  bool _emailClick = false;
+  bool _googleClick = false;
 
   @override
   void initState() {
@@ -200,15 +207,19 @@ class _AuthCardState extends State<AuthCard>
                 _authData['email'], _authData['password'], 'signInWithPassword')
             .then(
           (_) {
-            Navigator.of(context)
-                .popAndPushNamed(CategoriesScreen.routeName);
+            setState(() {
+              _emailClick = false;
+              _googleClick = false;
+            });
+            Navigator.of(context).popAndPushNamed(CategoriesScreen.routeName);
           },
         );
       } else {
         // TODO: Sign Up User
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password'], 'signUp');
-        Navigator.of(context).pushNamed(CategoriesScreen.routeName, arguments: [_authData['email'], _isSeller]);
+        Navigator.of(context).pushNamed(CategoriesScreen.routeName,
+            arguments: [_authData['email'], _isSeller]);
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';
@@ -248,10 +259,105 @@ class _AuthCardState extends State<AuthCard>
     }
   }
 
+  void _emailClickHandler() {
+    setState(() {
+      _emailClick = true;
+    });
+  }
+
+  void _googleClickHandler() {
+    setState(() {
+      _googleClick = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print('BUILD => AUTH SCREEN');
     final deviceSize = MediaQuery.of(context).size;
+    return Container(
+      width: deviceSize.width,
+      //padding: const EdgeInsets.all(16.0),
+      margin: !_emailClick
+          ? EdgeInsets.only(top: deviceSize.height * 0.15)
+          : EdgeInsets.only(top: deviceSize.height * 0),
+      child: Column(
+        children: <Widget>[
+          !_emailClick
+              ? _buildSignInContent(deviceSize)
+              : _buildEmailSignInCard(deviceSize)
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignInContent(Size deviceSize) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Text(
+          'Sign In',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white60,
+          ),
+        ),
+        SizedBox(height: deviceSize.height * 0.1),
+        SocialSignInButton(
+          assetName: 'assets/images/red-mail-logo.png',
+          text: 'Warp with Email',
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          onPressed: () => _emailClickHandler(),
+        ),
+        SizedBox(height: 8.0),
+        Text(
+          'or',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.deepOrangeAccent,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        SocialSignInButton(
+          assetName: 'assets/images/google-logo.png',
+          text: 'Warp with Google',
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          onPressed: () => {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGoogleSignIn(Size deviceSize) {
+    return Card(
+      elevation: 400,
+      shadowColor: Colors.deepPurpleAccent,
+      borderOnForeground: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      color: Color(0x192841).withOpacity(0.4),
+      margin: EdgeInsets.only(
+        right: deviceSize.width * 0.05,
+        top: deviceSize.height * 0.04,
+        left: deviceSize.width * 0.05,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: ElevatedButton(
+          onPressed: () => {},
+          child: Text('Google', style: TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailSignInCard(Size deviceSize) {
     return SingleChildScrollView(
       child: Card(
         elevation: 400,
@@ -263,34 +369,41 @@ class _AuthCardState extends State<AuthCard>
         color: Color(0x192841).withOpacity(0.4),
         margin: EdgeInsets.only(
           right: deviceSize.width * 0.05,
-          top: deviceSize.height * 0.04,
+          top: deviceSize.height * 0.03,
           left: deviceSize.width * 0.05,
         ),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 500),
           curve: Curves.decelerate,
           height: _authMode == AuthMode.SignUp
-              ? deviceSize.height * 0.70
-              : deviceSize.height * 0.67,
+              ? deviceSize.height * 0.73
+              : deviceSize.height * 0.56,
           constraints: BoxConstraints(
               minHeight: _authMode == AuthMode.SignUp
-                  ? deviceSize.height * 0.70
-                  : deviceSize.height * 0.60),
+                  ? deviceSize.height * 0.73
+                  : deviceSize.height * 0.56),
           width: deviceSize.width * 0.95,
           padding: EdgeInsets.all(20),
-          child: Form(
-            key: _form,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
+          child: _buildEmailForm(deviceSize),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailForm(Size deviceSize) {
+    return Form(
+      key: _form,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Container(
                     width: deviceSize.width,
-                    margin: EdgeInsets.only(
-                      right: deviceSize.width * 0,
-                      top: deviceSize.height * 0.00,
-                      left: deviceSize.width * 0.005,
-                      bottom: deviceSize.height * 0,
-                    ),
+                    padding: EdgeInsets.only(left: 0.1),
                     child: Text(
                       _authMode == AuthMode.Login ? 'Login' : 'New User',
                       textAlign: TextAlign.left,
@@ -301,237 +414,269 @@ class _AuthCardState extends State<AuthCard>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
-                    width: deviceSize.width,
-                    margin: EdgeInsets.only(
-                      right: deviceSize.width * 0,
-                      top: deviceSize.height * 0.0,
-                      left: deviceSize.width * 0.005,
-                      bottom: deviceSize.height * 0.03,
-                    ),
-                    child: Text(
-                      _authMode == AuthMode.Login
-                          ? 'Please SignIn to continue'
-                          : 'Please create an account',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _emailClick = false;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.exit_to_app_sharp,
+                    color: Colors.deepOrangeAccent,
                   ),
-                  TextFormField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Enter Email',
-                      focusColor: Colors.white,
-                      fillColor: Colors.white,
-                      icon: Icon(Icons.email_outlined, color: Colors.cyan),
-                      labelStyle: TextStyle(color: Colors.white30),
-                      hintStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                      errorStyle: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Email is empty schmuck!';
-                      } else if (EmailValidator.validate(value) == false) {
-                        return 'Email is invalid schmuck!';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onSaved: (value) => _authData['email'] = value,
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Enter Password',
-                      icon: Icon(Icons.lock_outlined, color: Colors.cyan),
-                      suffixIcon: IconButton(
-                        onPressed: () => {
-                          setState(() {
-                            _passwordObscure = !_passwordObscure;
-                          }),
-                        },
-                        icon: Icon(
-                          _passwordObscure
-                              ? Icons.remove_red_eye_outlined
-                              : Icons.remove_red_eye,
-                          color: Colors.blueGrey,
-                        ),
-                      ),
-                      labelStyle: TextStyle(color: Colors.white30),
-                      helperStyle: TextStyle(color: Colors.white30),
-                      hintStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                      errorStyle: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: _passwordObscure,
-                    onChanged: (value) => _checkPassword(value),
-                    onSaved: (value) => _authData['password'] = value,
-                  ),
-                  AnimatedContainer(
-                    constraints: BoxConstraints(
-                      minHeight: _authMode == AuthMode.SignUp ? 60 : 0,
-                      maxHeight: _authMode == AuthMode.SignUp ? 120 : 0,
-                    ),
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                    child: FadeTransition(
-                      opacity: _opacityAnimation,
-                      child: TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          suffixIcon: IconButton(
-                            onPressed: () => {
-                              setState(() {
-                                _passwordObscure = !_passwordObscure;
-                              }),
-                            },
-                            icon: Icon(
-                              _passwordObscure
-                                  ? Icons.remove_red_eye_outlined
-                                  : Icons.remove_red_eye,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          icon: Icon(Icons.lock_outlined, color: Colors.cyan),
-                          labelStyle: TextStyle(color: Colors.white30),
-                          hintStyle: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w700),
-                          errorStyle: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        obscureText: _passwordObscure,
-                        validator: _authMode == AuthMode.SignUp
-                            ? (value) {
-                                if (value != _passwordController.text) {
-                                  return 'Passwords do not match schmuck!';
-                                }
-                                return null;
-                              }
-                            : null,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.5),
-                  _authMode == AuthMode.SignUp
-                      ? Container(
-                          width: deviceSize.width,
-                          padding: EdgeInsets.only(
-                            top: deviceSize.height * 0,
-                            right: deviceSize.width * 0.19,
-                            left: deviceSize.width * 0.1,
-                            bottom: deviceSize.height * 0.01,
-                          ),
-                          child: Text(_displayText,
-                              style: TextStyle(
-                                  color: Colors.white30, fontSize: 12)),
-                        )
-                      : Text(''),
-                  _authMode == AuthMode.SignUp
-                      ? Container(
-                          width: deviceSize.width * 0.56,
-                          child: LinearProgressIndicator(
-                            minHeight: 1,
-                            value: _passStrength,
-                            color: _passStrength <= 1 / 4
-                                ? Colors.red
-                                : _passStrength == 2 / 4
-                                    ? Colors.yellow
-                                    : _passStrength == 3 / 4
-                                        ? Colors.blue
-                                        : Colors.green,
-                            backgroundColor: Colors.blueGrey,
-                          ),
-                        )
-                      : Text(''),
-                  _authMode == AuthMode.SignUp
-                      ? _buildPasswordHelper(context, deviceSize)
-                      : Text(''),
-                  SizedBox(height: 14),
-                  _authMode == AuthMode.SignUp
-                      ? Center(
-                          child: Container(
-                            width: deviceSize.width,
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSeller = !_isSeller;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isSeller
-                                        ? Icons.check_box_rounded
-                                        : Icons.check_box_outline_blank,
-                                    color: _isSeller
-                                        ? Colors.greenAccent
-                                        : Colors.deepOrangeAccent,
-                                  ),
-                                ),
-                                Text(
-                                  'Are you a seller ?',
-                                  style: TextStyle(color: Colors.white60),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      : Text(''),
-                  _isLoading == true
-                      ? CircularProgressIndicator()
-                      : Container(
-                          height: 50,
-                          padding: EdgeInsets.only(bottom: 10),
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 20,
-                              onSurface: Colors.blueGrey,
-                              fixedSize: const Size(199, 50),
-                              primary: Colors.cyan,
-                              onPrimary: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: _passStrength >= 3 / 4 ? _submit : null,
-                            child: Text(
-                                _authMode == AuthMode.Login
-                                    ? 'Login with Email'
-                                    : 'Create an account',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                  TextButton(
-                    onPressed: _toggleAuthMode,
-                    child: Text(
-                      _authMode == AuthMode.Login
-                          ? 'Need an account? Register'
-                          : 'Have an account? Sign in',
-                      style: TextStyle(
-                        color: Colors.cyan,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: deviceSize.width,
+              margin: EdgeInsets.only(
+                right: deviceSize.width * 0,
+                top: deviceSize.height * 0.0,
+                left: deviceSize.width * 0.005,
+                bottom: deviceSize.height * 0.03,
+              ),
+              child: Text(
+                _authMode == AuthMode.Login
+                    ? 'Please SignIn to continue'
+                    : 'Please create an account',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
+            TextFormField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Enter Email',
+                focusColor: Colors.white,
+                fillColor: Colors.white,
+                icon: Icon(Icons.email_outlined, color: Colors.cyan),
+                labelStyle: TextStyle(color: Colors.white30),
+                hintStyle:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                errorStyle:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Email is empty schmuck!';
+                } else if (EmailValidator.validate(value) == false) {
+                  return 'Email is invalid schmuck!';
+                } else {
+                  return null;
+                }
+              },
+              onSaved: (value) => _authData['email'] = value,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Enter Password',
+                icon: Icon(Icons.lock_outlined, color: Colors.cyan),
+                suffixIcon: IconButton(
+                  onPressed: () => {
+                    setState(() {
+                      _passwordObscure = !_passwordObscure;
+                    }),
+                  },
+                  icon: Icon(
+                    _passwordObscure
+                        ? Icons.remove_red_eye_outlined
+                        : Icons.remove_red_eye,
+                    color: Colors.blueGrey,
+                  ),
+                ),
+                labelStyle: TextStyle(color: Colors.white30),
+                helperStyle: TextStyle(color: Colors.white30),
+                hintStyle:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                errorStyle: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              obscureText: _passwordObscure,
+              onChanged: (value) => _checkPassword(value),
+              onSaved: (value) => _authData['password'] = value,
+            ),
+            AnimatedContainer(
+              constraints: BoxConstraints(
+                minHeight: _authMode == AuthMode.SignUp ? 60 : 0,
+                maxHeight: _authMode == AuthMode.SignUp ? 120 : 0,
+              ),
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeIn,
+              child: FadeTransition(
+                opacity: _opacityAnimation,
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    suffixIcon: IconButton(
+                      onPressed: () => {
+                        setState(() {
+                          _passwordObscure = !_passwordObscure;
+                        }),
+                      },
+                      icon: Icon(
+                        _passwordObscure
+                            ? Icons.remove_red_eye_outlined
+                            : Icons.remove_red_eye,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                    icon: Icon(Icons.lock_outlined, color: Colors.cyan),
+                    labelStyle: TextStyle(color: Colors.white30),
+                    hintStyle: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                    errorStyle: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  obscureText: _passwordObscure,
+                  validator: _authMode == AuthMode.SignUp
+                      ? (value) {
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match schmuck!';
+                          }
+                          return null;
+                        }
+                      : null,
+                ),
+              ),
+            ),
+            SizedBox(height: 8.5),
+            _authMode == AuthMode.SignUp
+                ? Container(
+                    width: deviceSize.width,
+                    padding: EdgeInsets.only(
+                      top: deviceSize.height * 0,
+                      right: deviceSize.width * 0.19,
+                      left: deviceSize.width * 0.1,
+                      bottom: deviceSize.height * 0.01,
+                    ),
+                    child: Text(_displayText,
+                        style: TextStyle(color: Colors.white30, fontSize: 12)),
+                  )
+                : Container(),
+            _authMode == AuthMode.SignUp
+                ? Container(
+                    width: deviceSize.width * 0.56,
+                    child: LinearProgressIndicator(
+                      minHeight: 1,
+                      value: _passStrength,
+                      color: _passStrength <= 1 / 4
+                          ? Colors.red
+                          : _passStrength == 2 / 4
+                              ? Colors.yellow
+                              : _passStrength == 3 / 4
+                                  ? Colors.blue
+                                  : Colors.green,
+                      backgroundColor: Colors.blueGrey,
+                    ),
+                  )
+                : Container(),
+            _authMode == AuthMode.SignUp
+                ? _buildPasswordHelper(context, deviceSize)
+                : Container(),
+            SizedBox(height: 14),
+            _authMode == AuthMode.SignUp
+                ? Center(
+                    child: Container(
+                      width: deviceSize.width,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isSeller = !_isSeller;
+                              });
+                            },
+                            icon: Icon(
+                              _isSeller
+                                  ? Icons.check_box_rounded
+                                  : Icons.check_box_outline_blank,
+                              color: _isSeller
+                                  ? Colors.greenAccent
+                                  : Colors.deepOrangeAccent,
+                            ),
+                          ),
+                          Text(
+                            'Are you a seller ?',
+                            style: TextStyle(color: Colors.white60),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            _isLoading == true
+                ? CircularProgressIndicator()
+                : Container(
+                    height: 50,
+                    padding: EdgeInsets.only(bottom: 10),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 20,
+                        onSurface: Colors.blueGrey,
+                        fixedSize: const Size(199, 50),
+                        primary: Colors.cyan,
+                        onPrimary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: _passStrength >= 3 / 4 ? _submit : null,
+                      child: Text(
+                          _authMode == AuthMode.Login
+                              ? 'Login with Email'
+                              : 'Create an account',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+            TextButton(
+              onPressed: _toggleAuthMode,
+              child: Text(
+                _authMode == AuthMode.Login
+                    ? 'Need an account? Register'
+                    : 'Have an account? Sign in',
+                style: TextStyle(
+                  color: Colors.cyan,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            _builderCardFooter(deviceSize),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _builderCardFooter(Size deviceSize) {
+    return Container(
+      width: deviceSize.width,
+      margin: EdgeInsets.only(
+        right: deviceSize.width * 0,
+        top: deviceSize.height * 0.037,
+        left: deviceSize.width * 0,
+        bottom: deviceSize.height * 0.01,
+      ),
+      child: Center(
+        child: Text(
+          '🚀 Powered by Neural Bots Inc',
+          style: TextStyle(
+            color: Colors.orange,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
