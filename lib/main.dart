@@ -1,6 +1,6 @@
 /// @@@ Kryptonian Shop APP @@@
 /// @@@ version: 5.2-beta-stable-optimised @@@
-/// @@@ App Features: Google Sign-in ✨
+/// @@@ App Features: Google Sign-in env setup ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

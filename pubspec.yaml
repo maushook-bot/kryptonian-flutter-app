@@ -24,12 +24,11 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^4.0.0
-  intl: ^0.17.0
-  http: ^0.13.4
+  intl: ^0.16.1
+  http: 0.12.0
   flutter_slidable: ^1.2.0
   sensors: ^0.4.2+6
   email_validator: ^2.0.1
-  google_fonts: 2.2.0
   shared_preferences: ^2.0.13
   flutter_dotenv: ^5.0.2
   stepper_touch: ^0.0.1
@@ -40,6 +39,10 @@ dependencies:
   liquid_swipe: 1.5.0
   fab_circular_menu: ^1.0.2
   eva_icons_flutter: ^3.1.0
+  firebase_auth: ^0.18.4+1
+  firebase_core: ^0.5.3
+  google_sign_in: ^4.5.6
+  #google_fonts: 0.7.0+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -114,6 +117,17 @@ flutter:
     - family: Anton
       fonts:
         - asset: assets/fonts/Anton-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -1,9 +1,10 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/helpers/custom_route.dart';
 import 'package:flutter_complete_guide/screens/auth_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -107,7 +108,9 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
                   ),
                   child: Text(
                     'Kryptonian Boutique',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
                       fontSize: 30,
                       color: Colors.white,
                     ),
@@ -118,10 +121,11 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
                   width: 350,
                   child: Text(
                     "A Futuristic Shopping Platform with Unique User Experience. Almost like transcending to Space!",
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 17,
                         color: const Color(0xffBABABA),
-                        fontWeight: FontWeight.w300),
+                        fontWeight: FontWeight.normal),
                   ),
                 ),
                 Container(
@@ -145,7 +149,8 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
                       children: [
                         Text(
                           'Get started',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
                             fontSize: 17,
                             color: Colors.white,
                           ),
