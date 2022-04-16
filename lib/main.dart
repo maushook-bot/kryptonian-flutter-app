@@ -1,11 +1,12 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 5.2-beta-stable-optimised @@@
-/// @@@ App Features: Google Sign-in env setup ✨
+/// @@@ version: 5.2-beta @@@
+/// @@@ App Features: Google Sign-in beta ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -34,6 +35,8 @@ import 'data/category_dummy_data.dart';
 import 'helpers/theme_config.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await dotenv.load(fileName: "assets/.env");
   runApp(MyApp());
 }

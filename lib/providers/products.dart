@@ -63,7 +63,7 @@ class Products with ChangeNotifier {
 
   /// Firebase CRED Methods:-
   Future<void> fetchProduct([bool filterByUser = false]) async {
-    //print('FETCH => PRODUCTS, $uid');
+    print('FETCH => PRODUCTS, $uid');
     final String DOMAIN = dotenv.env['DOMAIN'];
     final url = Uri.https(
       '${DOMAIN}-default-rtdb.europe-west1.firebasedatabase.app',
@@ -105,6 +105,7 @@ class Products with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('ERROR => $error');
+      print('FETCH? => PRODUCTS, $uid');
       throw error;
     }
   }

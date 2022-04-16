@@ -9,12 +9,34 @@ import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _uid;
   Timer _authTimer;
+
+  String _googleToken;
+  String _googleUid;
+
+  /// Instantiate FireBase Auth:-
+  final _firebaseAuth = FirebaseAuth.instance;
+
+  /// Get google-current-user:-
+  User get currentGoogleUser => _firebaseAuth.currentUser;
+  String get googleToken {
+    final String SECRET_KEY = dotenv.env['SECRET_KEY'];
+    _googleToken = SECRET_KEY;
+    return _googleToken;
+  }
+
+  String get googleUid {
+    _googleUid =
+        _firebaseAuth.currentUser == null ? null : currentGoogleUser.uid;
+    return _googleUid;
+  }
 
   bool get isAuth {
     return token != null;
@@ -26,6 +48,8 @@ class Auth with ChangeNotifier {
         _expiryDate != null &&
         _expiryDate.isAfter(DateTime.now())) {
       return _token;
+    } else if (_token != null && googleToken != null) {
+      return _token;
     }
     return null;
   }
@@ -34,66 +58,86 @@ class Auth with ChangeNotifier {
     return _uid;
   }
 
-  Future<void> _authenticate(
-      String email, String password, String urlSegment) async {
+  Future<void> _authenticate(String email, String password, String urlSegment,
+      bool isEmailSignIn) async {
     final String API_KEY = dotenv.env['API_KEY'];
-    final url = Uri.parse(
-        'https://identitytoolkit.googleapis.com/v1/accounts:${urlSegment}?key=$API_KEY');
+    final String SECRET_KEY = dotenv.env['SECRET_KEY'];
 
-    try {
-      final response = await http.post(
-        url,
-        body: json.encode(
+    if (isEmailSignIn) {
+      /// Email SignIn
+      print('Inside Email Sign In: $isEmailSignIn');
+      final url = Uri.parse(
+          'https://identitytoolkit.googleapis.com/v1/accounts:${urlSegment}?key=$API_KEY');
+
+      try {
+        final response = await http.post(
+          url,
+          body: json.encode(
+            {
+              'email': email,
+              'password': password,
+              'returnSecureToken': true,
+            },
+          ),
+        );
+        var responseData = json.decode(response.body);
+
+        if (responseData['error'] != null) {
+          throw HttpException(message: responseData['error']['message']);
+        }
+
+        /// Save Token and Expiry date:-
+        _token = responseData['idToken'];
+        _uid = responseData['localId'];
+        _expiryDate = DateTime.now().add(
+          Duration(seconds: int.parse(responseData['expiresIn'])),
+          //_expiryDate = DateTime.now().add(
+          //  Duration(seconds: 6),
+        );
+
+        // Auto-Logout will be triggered after token expiry:-
+        _autoLogout();
+        notifyListeners();
+
+        /// Shared Pref to Store/Get data from Device:-
+        final prefs = await SharedPreferences.getInstance();
+        final userData = json.encode(
           {
-            'email': email,
-            'password': password,
-            'returnSecureToken': true,
+            'token': _token,
+            'userId': _uid,
+            'expiryDate': _expiryDate.toIso8601String(),
           },
-        ),
-      );
-      var responseData = json.decode(response.body);
-
-      if (responseData['error'] != null) {
-        throw HttpException(message: responseData['error']['message']);
+        );
+        prefs.setString('userData', userData);
+      } catch (error) {
+        throw error;
       }
-
-      /// Save Token and Expiry date:-
-      _token = responseData['idToken'];
-      _uid = responseData['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(seconds: int.parse(responseData['expiresIn'])),
-        //_expiryDate = DateTime.now().add(
-        //  Duration(seconds: 6),
-      );
-
-      // Auto-Logout will be triggered after token expiry:-
-      _autoLogout();
+    } else {
+      /// Google SignIn
+      print('Inside Google Sign In: ${!isEmailSignIn}');
+      _token = SECRET_KEY;
+      _uid = googleUid;
       notifyListeners();
-
-      /// Shared Pref to Store/Get data from Device:-
-      final prefs = await SharedPreferences.getInstance();
-      final userData = json.encode(
-        {
-          'token': _token,
-          'userId': _uid,
-          'expiryDate': _expiryDate.toIso8601String(),
-        },
-      );
-      prefs.setString('userData', userData);
-    } catch (error) {
-      throw error;
     }
   }
 
-  Future<void> signup(String email, String password, String urlSegment) async {
-    return _authenticate(email, password, urlSegment);
+  Future<void> signup(String email, String password, String urlSegment,
+      bool isEmailSignIn) async {
+    return _authenticate(email, password, urlSegment, isEmailSignIn);
   }
 
-  Future<void> login(String email, String password, String urlSegment) async {
-    return _authenticate(email, password, urlSegment);
+  Future<void> login(String email, String password, String urlSegment,
+      bool isEmailSignIn) async {
+    return _authenticate(email, password, urlSegment, isEmailSignIn);
   }
 
   void logout() async {
+    /// Reset Google Sign In Params:-
+    final googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    await _firebaseAuth.signOut();
+
+    /// Reset Email Sign In params:-
     _token = null;
     _uid = null;
     _expiryDate = null;
@@ -141,5 +185,32 @@ class Auth with ChangeNotifier {
     notifyListeners();
     _autoLogout();
     return true;
+  }
+
+  /// GOOGLE SIGN IN:-
+  Future<User> signInWithGoogle() async {
+    final googleSignIn = GoogleSignIn();
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser != null) {
+      final googleAuth = await googleUser.authentication;
+      if (googleAuth.idToken != null) {
+        final userCredential = await _firebaseAuth
+            .signInWithCredential(GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        ));
+        return userCredential.user;
+      } else {
+        throw FirebaseAuthException(
+          code: 'ERROR_MISSING_GOOGLE_ID_TOKEN',
+          message: 'Missing Google ID Token',
+        );
+      }
+    } else {
+      throw FirebaseAuthException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign in aborted by user',
+      );
+    }
   }
 }

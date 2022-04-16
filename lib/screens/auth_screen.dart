@@ -204,7 +204,7 @@ class _AuthCardState extends State<AuthCard>
         // TODO: Log User In
         await Provider.of<Auth>(context, listen: false)
             .login(
-                _authData['email'], _authData['password'], 'signInWithPassword')
+                _authData['email'], _authData['password'], 'signInWithPassword', _emailClick)
             .then(
           (_) {
             setState(() {
@@ -216,8 +216,12 @@ class _AuthCardState extends State<AuthCard>
         );
       } else {
         // TODO: Sign Up User
+        setState(() {
+          _emailClick = false;
+          _googleClick = false;
+        });
         await Provider.of<Auth>(context, listen: false)
-            .signup(_authData['email'], _authData['password'], 'signUp');
+            .signup(_authData['email'], _authData['password'], 'signUp', _emailClick);
         Navigator.of(context).pushNamed(CategoriesScreen.routeName,
             arguments: [_authData['email'], _isSeller]);
       }
@@ -283,9 +287,17 @@ class _AuthCardState extends State<AuthCard>
           : EdgeInsets.only(top: deviceSize.height * 0),
       child: Column(
         children: <Widget>[
-          !_emailClick
-              ? _buildSignInContent(deviceSize)
-              : _buildEmailSignInCard(deviceSize)
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            switchOutCurve: Curves.easeOut,
+            transitionBuilder: (child, animation) => ScaleTransition(
+              scale: animation,
+              child: child,
+            ),
+            child: !_emailClick
+                ? _buildSignInContent(deviceSize)
+                : _buildEmailSignInCard(deviceSize),
+          ),
         ],
       ),
     );
@@ -327,7 +339,23 @@ class _AuthCardState extends State<AuthCard>
           text: 'Warp with Google',
           backgroundColor: Colors.black,
           textColor: Colors.white,
-          onPressed: () => {},
+          onPressed: () async {
+            await Provider.of<Auth>(context, listen: false).signInWithGoogle();
+            await Provider.of<Auth>(context, listen: false).login('', '', '', _emailClick);
+            print(
+                'Google-USER => ${Provider.of<Auth>(context, listen: false).currentGoogleUser.uid}');
+            print(
+                'Google-USER => ${Provider.of<Auth>(context, listen: false).currentGoogleUser.email}');
+            setState(() {
+              _emailClick = false;
+              _googleClick = false;
+            });
+            Navigator.of(context)
+                .popAndPushNamed(CategoriesScreen.routeName, arguments: [
+              '',
+              true,
+            ]);
+          },
         ),
       ],
     );

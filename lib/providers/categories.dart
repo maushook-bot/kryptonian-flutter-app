@@ -133,6 +133,7 @@ class Categories with ChangeNotifier {
     try {
       final response = await http.get(url);
       final Map<String, dynamic> result = json.decode(response.body);
+      //print(result);
       final List<Category> LoadedCategory = [];
       result['error'] == 'Permission denied'
           ? throw 'Authentication Failed Permission Denied!'
@@ -151,7 +152,7 @@ class Categories with ChangeNotifier {
       //print(_categories);
       notifyListeners();
     } catch (error) {
-      //print('Fetch Categories-ERROR => $error');
+      print('Fetch Categories-ERROR => $error');
       throw error;
     }
 
