@@ -1,6 +1,7 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 5.2-beta @@@
-/// @@@ App Features: Google Sign-in beta ✨
+/// @@@ version: 5.4-beta @@@
+/// @@@ Environment: Staging
+/// @@@ App Features: KB-30-Publish-krypton-PlayStore-beta ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

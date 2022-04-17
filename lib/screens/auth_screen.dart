@@ -353,7 +353,7 @@ class _AuthCardState extends State<AuthCard>
             Navigator.of(context)
                 .popAndPushNamed(CategoriesScreen.routeName, arguments: [
               '',
-              true,
+              false,
             ]);
           },
         ),
