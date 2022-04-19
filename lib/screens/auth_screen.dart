@@ -216,14 +216,19 @@ class _AuthCardState extends State<AuthCard>
         );
       } else {
         // TODO: Sign Up User
-        setState(() {
-          _emailClick = false;
-          _googleClick = false;
-        });
         await Provider.of<Auth>(context, listen: false)
-            .signup(_authData['email'], _authData['password'], 'signUp', _emailClick);
-        Navigator.of(context).pushNamed(CategoriesScreen.routeName,
-            arguments: [_authData['email'], _isSeller]);
+            .signup(_authData['email'], _authData['password'], 'signUp',
+            _emailClick)
+            .then(
+              (_) {
+            setState(() {
+              _emailClick = false;
+              _googleClick = false;
+            });
+            Navigator.of(context).pushNamed(CategoriesScreen.routeName,
+                arguments: [_authData['email'], _isSeller]);
+          },
+        );
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication Failed!';
