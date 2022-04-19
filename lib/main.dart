@@ -1,7 +1,7 @@
 /// @@@ Kryptonian Shop APP @@@
-/// @@@ version: 5.4-beta @@@
+/// @@@ version: 5.4-stable @@@
 /// @@@ Environment: Staging
-/// @@@ App Features: KB-30-Publish-krypton-PlayStore-beta ✨
+/// @@@ App Features: KB-30-Publish-krypton-PlayStore-stable ✨
 /// @@@ WebServer: FireBase @@@
 /// @@@ AUTHOR: Maushook @@@
 /// @@@ COPYRIGHT: Neural Bots Inc @@@

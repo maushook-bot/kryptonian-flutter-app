@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "619848828619",
+    "firebase_url": "https://kryptonian-boutique-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "kryptonian-boutique",
+    "storage_bucket": "kryptonian-boutique.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619848828619:android:c743970e85476a497dfd4e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_shop_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "619848828619-nbtavithgal8cmoornhp0bthq5ad0v2t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_shop_app",
+            "certificate_hash": "35f72ca2ad5494f6b014fd1aa7baee64457a35e2"
+          }
+        },
+        {
+          "client_id": "619848828619-kjk8ccgtq7dj91st5q51blhsa7libo0k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZkoQ6j5CeKCQM-ZStEppgQGoFyk958P4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "619848828619-kjk8ccgtq7dj91st5q51blhsa7libo0k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
