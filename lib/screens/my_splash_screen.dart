@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/pallete/deepBlue.dart';
 
 class MySplashScreen extends StatefulWidget {
   @override
