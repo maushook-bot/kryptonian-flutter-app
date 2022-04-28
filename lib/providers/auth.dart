@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_complete_guide/models/http_exception.dart';
