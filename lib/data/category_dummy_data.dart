@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_complete_guide/providers/category.dart';
 
 List<Category> categoryDummyData = [];
