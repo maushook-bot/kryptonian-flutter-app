@@ -1,6 +1,7 @@
 import 'package:flutter_complete_guide/providers/category.dart';
 
 List<Category> categoryDummyData = [];
+
 List<Category> categoryDummyDataTemp = [
   Category(
     id: 'c1',
